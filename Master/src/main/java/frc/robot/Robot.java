@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -16,26 +16,56 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Puncher;
 import frc.robot.OI;
 
-
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
+ * project.
+ */
 public class Robot extends TimedRobot {
   public static Drivetrain drivetrain;
   public static Intake intake;
   public static Lifter lifter;
   public static Puncher puncher;
   public static OI oi;
-
+  /**
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
+   */
   @Override
   public void robotInit() {
+    // This is called once when the robot code initializes
     drivetrain = new Drivetrain();
     intake = new Intake();
     lifter = new Lifter();
     puncher = new Puncher();
     oi = new OI();
-    
+    }
+
+  @Override
+  public void robotPeriodic() {
+    // This is called every period regardless of mode
   }
- 
+
+  @Override
+  public void autonomousInit() {
+    // This is called once when the robot first enters autonomous mode
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    // This is called periodically while the robot is in autonomous mode
+  }
+
+  @Override
+  public void teleopInit() {
+    // This is called once when the robot first enters teleoperated mode
+  }
+
   @Override
   public void teleopPeriodic() {
+    // This is called periodically while the robot is in teleopreated mode
     Scheduler.getInstance().run();
     updateToggle();
 
@@ -79,6 +109,7 @@ public class Robot extends TimedRobot {
     }
   }
 
+
 	private void updateToggle() {
 		 if(oi.XboxController1.getRawButton(1)){
         if(!oi.togglePressed1){
@@ -98,4 +129,15 @@ public class Robot extends TimedRobot {
             oi.togglePressed2 = false;
         }
 	}
+
+  @Override
+  public void testInit() {
+    // This is called once when the robot enters test mode
+  }
+
+  @Override
+  public void testPeriodic() {
+    // This is called periodically while the robot is in test mode
+  }
+
 }
