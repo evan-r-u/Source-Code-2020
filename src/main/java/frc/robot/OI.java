@@ -19,4 +19,8 @@ public class OI {
   public boolean togglePressed2 = false;
   DigitalInput forwardLimitSwitch = new DigitalInput(RobotMap.forwardLimitSwitch.value);
   DigitalInput backwardLimitSwitch = new DigitalInput(RobotMap.backwardLimitSwitch.value);
+
+  public boolean fullPower = false;
+  public boolean power83 = false;
+  public boolean threeFourthsPower = true;
 }
