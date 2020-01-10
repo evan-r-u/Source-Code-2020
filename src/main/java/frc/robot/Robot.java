@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static Lifter lifter;
   public static Puncher puncher;
+  public static OI oi;
  
   /**
    * This function is run when the robot is first started up and should be used
