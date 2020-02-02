@@ -9,8 +9,11 @@ package frc.robot;
 
 public enum RobotMap {
   // Motor Values
-  leftMotor(1),
-  rightMotor(0),
+  leftMotor(3),
+  rightMotor(2),
+  // leftMotor(1),
+  // rightMotor(0),
+  magazineMotor(4),
   // Control Value
   XboxController1(0),
   XboxController2(1),

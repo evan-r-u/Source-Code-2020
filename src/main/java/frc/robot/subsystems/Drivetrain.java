@@ -21,6 +21,7 @@ public class Drivetrain extends Subsystem {
     leftMotor = new Spark(RobotMap.leftMotor.value);
     rightMotor = new Spark(RobotMap.rightMotor.value);
     drivetrain = new DifferentialDrive(leftMotor, rightMotor);
+
   }
 
   @Override

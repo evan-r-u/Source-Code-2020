@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -14,8 +15,10 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Lifter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Puncher;
+import frc.robot.subsystems.Magazine;
 import edu.wpi.first.cameraserver.*;
 import frc.robot.OI;
+import edu.wpi.first.wpilibj.smartdashboard.*; 
 
 
 /**
@@ -31,11 +34,14 @@ public class Robot extends TimedRobot {
   public static Lifter lifter;
   public static Puncher puncher;
   public static OI oi;
-  double leftStickVal;
-  double rightStickVal;
+  public static Magazine magazine;
+  public double leftStickVal;
+  public double rightStickVal;
   public static Boolean autonomous;
   public static double level;
   public static Boolean changeAutonomous;
+
+  public static Spark testSpark;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -48,6 +54,10 @@ public class Robot extends TimedRobot {
     lifter = new Lifter();
     puncher = new Puncher();
     oi = new OI();
+    magazine = new Magazine();
+
+    // testSpark = new Spark(4);
+
 
     CameraServer.getInstance().startAutomaticCapture(0);
     CameraServer.getInstance().startAutomaticCapture(1);
@@ -57,6 +67,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // This is called every period regardless of mode
+    drivetrain.drivetrain.tankDrive(-1.0, -1.0);
+    magazine.checkColor();
   }
 
   @Override
@@ -86,7 +98,6 @@ public class Robot extends TimedRobot {
     changeAutonomous = false;
     Scheduler.getInstance().run();
     updateToggle();
-
     
     /*Controller 1*/
 
@@ -118,10 +129,12 @@ public class Robot extends TimedRobot {
     if (oi.fullPower) {
       level = 1;
       System.out.println("Full power");
+      SmartDashboard.putString("Power", "100%");
     }
     else if (oi.power83) {
       level = 0.83;
       System.out.println("83% power");
+      SmartDashboard.putString("Power", "83%");
     }
     else if (oi.threeFourthsPower) {
       if (autonomous) {
@@ -134,12 +147,13 @@ public class Robot extends TimedRobot {
         level = 0.75;
       }
       System.out.println("3/4 power");
+      SmartDashboard.putString("Power", "75%");
     }
 
-    double magnitudeLeft = Math.pow((oi.XboxController2.getY(Hand.kLeft)), 3) * level;
-    double magnitudeRight = Math.pow((oi.XboxController2.getY(Hand.kRight)), 3) * level;
-    drivetrain.drivetrain.tankDrive(magnitudeRight, magnitudeLeft);
-
+    // double magnitudeLeft = Math.pow((oi.XboxController2.getY(Hand.kLeft)), 3) * level;
+    // double magnitudeRight = Math.pow((oi.XboxController2.getY(Hand.kRight)), 3) * level;
+    // drivetrain.drivetrain.tankDrive(magnitudeRight, magnitudeLeft);
+  
     
     if (oi.toggleOn2) {
       // Punch
