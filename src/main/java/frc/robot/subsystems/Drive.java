@@ -8,20 +8,33 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-// import edu.wpi.first.wpilibj
+import edu.wpi.first.wpilibj.AnalogEncoder;
+//import edu.wpi.first.wpilibj.AnalogOutput;
+//import edu.wpi.first.wpilibj.AnalogTriggerOutput;
+//import edu.wpi.first.wpilibj.drive.*;
+//import edu.wpi.first.wpilibj.
 
 
 import frc.robot.RobotMap;
 
 public class Drive extends Subsystem {
+    
+    //Gryo = new gyro();
+    //Gyro gyro;
+    // gyro = new myGyro();
+    //AnalogGyro gyro;
+    public AnalogGyro gyro = new AnalogGyro(1);
+    
+    double angle = gyro.getAngle();
     int P, I, D = 1;
     int integral, previous_error, setpoint = 0;
-    Gyro gyro;
-    DifferentialDrive Drivechain;
+    
+    DifferentialDrive Drivetrain;
 
-    public Drive(Gyro gyro) {
+    public Drive(AnalogGyro gyro) {
         this.gyro = gyro;
     }
 
@@ -40,6 +53,6 @@ public class Drive extends Subsystem {
     public void execute()
     {
         PID();
-        robotDrive.tankDrive(0, rcw);
+        Drive.tankDrive(0, rcw);
     }
     }
