@@ -6,7 +6,7 @@ public class Shooter extends subsystems;
 public class Shooter extends Subsystems {
     public Spark leftMotor;
     public Spark rightMotor;
-    public DifferentialDrive shooter;
+
 
     public static Shooter() {
         leftMotor = new Spark(RobotMap.leftShooter.value);
@@ -23,31 +23,36 @@ public class Shooter extends Subsystems {
     }
 //replace task with function
 
-    task smallForward() {
-        Motor(rightMotor) = 0.5;
-        Motor(leftMotor) = 0.5;
+public static void smallForward() {
+    leftMotor.set(0.5);
+    rightMotor.set(0.5);
 }
-task bigLeft() {
-    Motor(rightMotor) = 1;
-    Motor(leftMotor) = 0;
+}
+public static void bigLeft() {
+    leftMotor.set(1);
+    rightMotor.set(0);
+}
   
 }
-task smalllLeft() {
-    Motor(rightMotor) = 0.5;
-    Motor(leftMotor) = 0;
+public static void smallLeft() {
+    leftMotor.set(0.5);
+    rightMotor.set(0);
+}
   
 }
-task bigright() {
-    Motor(rightMotor) = 0;
-    Motor(leftMoror) = 1;
+public static void bigRight() {
+    leftMotor.set(0);
+    rightMotor.set(1);
+}
   
 }
-task smallright() {
-    Motor(rightMotor) = 0;
-    Motor(leftMoror) = 0.5;
+public static void smallForward() {
+    leftMotor.set(0);
+    rightMotor.set(0.5);
+}
   
 }
       @Override
-      public void initDefaultCommand() {
+      public static void initDefaultCommand() {
       }
     }

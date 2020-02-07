@@ -13,7 +13,7 @@ public enum RobotMap {
   rightMotor(0),
   // Shooter Values
   leftShooter(3), //port 3
-  rightShooter(3), //port 3
+  rightShooter(2), //port 2
   // Control Value
   XboxController1(0),
   XboxController2(1),
