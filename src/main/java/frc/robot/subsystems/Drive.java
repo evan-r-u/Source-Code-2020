@@ -31,6 +31,10 @@ public class Drive extends Subsystem {
     double angle = gyro.getAngle();
     int P, I, D = 1;
     int integral, previous_error, setpoint = 0;
+    double error;
+    double derivative;
+    double rcw;
+
     
     DifferentialDrive Drivetrain;
 
@@ -53,6 +57,6 @@ public class Drive extends Subsystem {
     public void execute()
     {
         PID();
-        Drive.tankDrive(0, rcw);
+        Drive.tankDrive(0, this.rcw);
     }
     }
