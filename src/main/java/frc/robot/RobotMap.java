@@ -9,27 +9,34 @@ package frc.robot;
 
 public enum RobotMap {
   // Motor Values
-  leftMotor(3),
-  rightMotor(2),
-  // leftMotor(1),
-  // rightMotor(0),
+  topShooter(3),
+  bottomShooter(2),
+  leftDrivetrain(1),
+  rightDrivetrain(0),
   magazineMotor(4),
   // Control Value
   XboxController1(0),
   XboxController2(1),
-  // Lifter Values
-  Lifter1(5),
-  Lifter2(6),
-  // Punch Values
-  punchForward(2),
-  punchBackward(1),
-  // Intake Value
-  intakePivot(7),
+  // Elevator Values
+  // extendElevator(5),
+  extendElevator(5),
+  liftRobot(6),
+  // Encoder Values
+  leftDrivetrainEncoder1(0),
+  leftDrivetrainEncoder2(1),
+  rightDrivetrainEncoder1(2),
+  rightDrivetrainEncoder2(3),
   // Intake Roller Value
-  intakeRoller(8),
-  // Limit Switch Values
-  forwardLimitSwitch(1),
-  backwardLimitSwitch(2);
+  intakeRoller(7);
+  // extendElevator(5),
+  // // Punch Values
+  // punchForward(2),
+  // punchBackward(1),
+  // // Intake Value
+  // intakePivot(7),
+  // // Limit Switch Values
+  // forwardLimitSwitch(1),
+  // backwardLimitSwitch(2);
 
   public final int value;
 

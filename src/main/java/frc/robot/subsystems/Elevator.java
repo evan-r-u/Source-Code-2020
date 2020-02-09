@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
-public class Intake extends Subsystem {
-    public Spark intakeRoller;
+public class Elevator extends Subsystem {
+    public Spark extendMotor;
+    public Spark liftMotor;
 
-    public Intake() {
-        intakeRoller = new Spark(RobotMap.intakeRoller.value);
+    public Elevator() {
+        extendMotor = new Spark(RobotMap.extendElevator.value);
+        liftMotor = new Spark(RobotMap.liftRobot.value);
     }
 
     @Override

@@ -21,6 +21,7 @@ public class Magazine extends Subsystem {
     public static int ballCount; 
     public static Spark magazineSpark;
     private I2C.Port i2cPort;
+    public static int waitCount;
 
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a 
@@ -35,6 +36,7 @@ public class Magazine extends Subsystem {
         m_colorSensor = new ColorSensorV3(i2cPort);
         magazineSpark = new Spark(RobotMap.magazineMotor.value);
         ballCount = 0;
+        waitCount = 0;
 
     }
 
@@ -86,31 +88,48 @@ public class Magazine extends Subsystem {
         //B = between 0 and 10
         // if(detectedColor.red >= 240 && detectedColor.red <= 260 && detectedColor.green >= 190 && detectedColor.green <= 210 && detectedColor.blue >= 0 && detectedColor.blue <= 10){
         
-        
+        // if yellow
         if (detectedColor.blue <= 0.15) {
-            intakeBall();
-        }
-        else {
+            runMagazine();
+            Timer.delay(4);
             magazineSpark.set(0.0);
+
+
+            // waitCount++;
+
+            // SmartDashboard.putNumber("waitCount", waitCount);
+
+            // while()
+
+            // if (waitCount >= 75) {
+
+            //     magazineSpark.set(0.0);
+            //     waitCount = 0;
+            // }
+            // else {
+            //     runMagazine();
+            // }
         }
+
+        // waitCount = 0;
+            
+        // else {
+        //     magazineSpark.set(0.0);
+        // }
 
         // magazineSpark.set(0.6);
 
 
     }
-    public static void intakeBall() {
+    public static void runMagazine() {
         //checks that slot is open
-        if (ballCount < 5) {
-            //run motor for ball to go up
-            magazineSpark.set(0.6);
-            Timer.delay(2);
+        // if (ballCount < 5) {
+        //run motor for ball to go up
+        magazineSpark.set(0.4);
 
-            
-            //ball count goes up by 1
-            ballCount++;
-
+        //ball count goes up by 1
+        ballCount++;
         }    
-    }
     
     @Override
     public void initDefaultCommand() {

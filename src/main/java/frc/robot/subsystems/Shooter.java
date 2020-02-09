@@ -11,16 +11,26 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
-public class Lifter extends Subsystem {
-    public Spark Lifter1;
-    public Spark Lifter2;
+public class Shooter extends Subsystem {
+  public Spark topMotor;
+  public Spark bottomMotor;
 
-    public Lifter() {
-        Lifter1 = new Spark(RobotMap.Lifter1.value);
-        Lifter2 = new Spark(RobotMap.Lifter2.value);
-    }
+  public Shooter() {
+    topMotor = new Spark(RobotMap.topShooter.value);
+    bottomMotor = new Spark(RobotMap.bottomShooter.value);
 
-    @Override
-    public void initDefaultCommand() {
-    }
+
+    // ensures that motors keep running during Timer.delay()
+    topMotor.setSafetyEnabled(false);
+    bottomMotor.setSafetyEnabled(false);
+
+    topMotor.setInverted(true);
+
+  }
+
+  @Override
+  public void initDefaultCommand() {
+  }
+
+  
 }
