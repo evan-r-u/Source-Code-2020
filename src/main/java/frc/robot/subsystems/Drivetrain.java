@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
+import java.lang.System;
 
 public class Drivetrain extends Subsystem {
   public VictorSP leftMotor;
@@ -40,6 +41,12 @@ public class Drivetrain extends Subsystem {
     // drivetrain.tankDrive(0.4, 0);
     // Timer.delay(1);
     // drivetrain.tankDrive(0.4, 0.4);
+
+    
+    System.out.print("Left Encoder Distance -");
+    System.out.print(leftEncoder.getDistance());
+    System.out.print("\nRight Encoder Distance -");
+    System.out.print(rightEncoder.getDistance());
 
     // Drives forward at half speed until the robot has moved 5 feet, then stops
     if(leftEncoder.getDistance() < 5 && rightEncoder.getDistance() < 5) {
