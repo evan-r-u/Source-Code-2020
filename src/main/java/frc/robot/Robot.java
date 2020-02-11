@@ -176,7 +176,7 @@ public class Robot extends TimedRobot {
     // This is called periodically while the robot is in autonomous mode
     super.autonomousPeriodic();
 
-    teleopPeriodic();
+    // teleopPeriodic();
 }
 
   @Override
