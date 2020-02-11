@@ -244,8 +244,8 @@ public class Robot extends TimedRobot {
       SmartDashboard.putString("Power", "75%");
     }
 
-    double magnitudeLeft = -Math.pow((oi.XboxController2.getY(Hand.kLeft)), 3) * level;
-    double magnitudeRight = -Math.pow((oi.XboxController2.getY(Hand.kRight)), 3) * level;
+    double magnitudeLeft = Math.pow((oi.XboxController2.getY(Hand.kLeft)), 3) * level;
+    double magnitudeRight = Math.pow((oi.XboxController2.getY(Hand.kRight)), 3) * level;
     drivetrain.drivetrain.tankDrive(magnitudeLeft, magnitudeRight);
 
     // Update_Limelight_Tracking();

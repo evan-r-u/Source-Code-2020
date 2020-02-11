@@ -29,6 +29,9 @@ public class Drivetrain extends Subsystem {
     leftEncoder = new Encoder(RobotMap.leftDrivetrainEncoder1.value, RobotMap.leftDrivetrainEncoder2.value);
     rightEncoder = new Encoder(RobotMap.rightDrivetrainEncoder1.value, RobotMap.rightDrivetrainEncoder2.value);
 
+    leftMotor.setInverted(true);
+    rightMotor.setInverted(true);
+    
     // ensures that motors keep running during Timer.delay()
     drivetrain.setSafetyEnabled(false);
 

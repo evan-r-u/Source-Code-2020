@@ -38,6 +38,8 @@ public class Magazine extends Subsystem {
         ballCount = 0;
         waitCount = 0;
 
+        SmartDashboard.putNumber("Number of Balls", ballCount);
+
     }
 
     public void checkColor() {
