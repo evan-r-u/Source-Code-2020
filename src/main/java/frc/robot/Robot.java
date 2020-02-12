@@ -114,11 +114,8 @@ public class Robot extends TimedRobot {
     CameraServer.getInstance().startAutomaticCapture(1);
 
 
-    // Configures the encoder's distance-per-pulse
-    // The robot moves forward 1 foot per encoder rotation
-    // There are 256 pulses per encoder rotation
-    drivetrain.leftEncoder.setDistancePerPulse(1./256.);
-    drivetrain.rightEncoder.setDistancePerPulse(1./256.);
+    // Extends intake
+    intake.intakeExtender.set(1.0);
 
 
 

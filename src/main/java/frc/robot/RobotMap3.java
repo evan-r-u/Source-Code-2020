@@ -7,19 +7,13 @@
 
 package frc.robot;
 
-public enum RobotMap2 {
-    // Power Value
-    power(0.8),
-
-    //Encoder Values
-    drivetrainEncoder_RadiansPerPulse(2*3.14/512), //Check, assume encoders have 512 pulse/rev
-    drivetrainEncoder_MaxPeriod(1.0),
-    drivetrainEncoder_MinRate(6*3.14);
-   
+public enum RobotMap3 {
+    leftDrivetrainEncoder_Reverse(false),
+    rightDrivetrainEncoder_Reverse(true);
     
-    public final double value;
+    public final boolean value;
   
-    RobotMap2(double value) {
+    RobotMap3(boolean value) {
       this.value = value;
     }
   }

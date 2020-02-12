@@ -26,8 +26,10 @@ public enum RobotMap {
   leftDrivetrainEncoder2(1),
   rightDrivetrainEncoder1(2),
   rightDrivetrainEncoder2(3),
-  // Intake Roller Value
-  intakeRoller(7);
+  // Intake Values
+  intakeRoller(7),
+  // PWM channel
+  intakeExtender(0);
   // extendElevator(5),
   // // Punch Values
   // punchForward(2),

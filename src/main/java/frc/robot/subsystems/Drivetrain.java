@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap;
+import frc.robot.RobotMap2;
+import frc.robot.RobotMap3;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
 import java.lang.System;
@@ -26,8 +28,23 @@ public class Drivetrain extends Subsystem {
     leftMotor = new VictorSP(RobotMap.leftDrivetrain.value);
     rightMotor = new VictorSP(RobotMap.rightDrivetrain.value);
     drivetrain = new DifferentialDrive(leftMotor, rightMotor);
-    leftEncoder = new Encoder(RobotMap.leftDrivetrainEncoder1.value, RobotMap.leftDrivetrainEncoder2.value);
-    rightEncoder = new Encoder(RobotMap.rightDrivetrainEncoder1.value, RobotMap.rightDrivetrainEncoder2.value);
+    leftEncoder = new Encoder(RobotMap.leftDrivetrainEncoder1.value, RobotMap.leftDrivetrainEncoder2.value, RobotMap3.leftDrivetrainEncoder_Reverse.value, Encoder.EncodingType.k2X);
+    rightEncoder = new Encoder(RobotMap.rightDrivetrainEncoder1.value, RobotMap.rightDrivetrainEncoder2.value, RobotMap3.rightDrivetrainEncoder_Reverse.value, Encoder.EncodingType.k2X);
+    
+    // Configures the encoder's distance-per-pulse
+    // The robot moves forward 1 foot per encoder rotation
+    // There are 256 pulses per encoder rotation
+    leftEncoder.setDistancePerPulse(1./256.);
+    leftEncoder.setMaxPeriod(RobotMap2.drivetrainEncoder_MaxPeriod.value);
+    leftEncoder.setMinRate(RobotMap2.drivetrainEncoder_MinRate.value);
+    leftEncoder.setDistancePerPulse(RobotMap2.drivetrainEncoder_RadiansPerPulse.value);
+    leftEncoder.setSamplesToAverage(7);
+
+    rightEncoder.setDistancePerPulse(1./256.);
+    rightEncoder.setMaxPeriod(RobotMap2.drivetrainEncoder_MaxPeriod.value);
+    rightEncoder.setMinRate(RobotMap2.drivetrainEncoder_MinRate.value);
+    rightEncoder.setDistancePerPulse(RobotMap2.drivetrainEncoder_RadiansPerPulse.value);
+    rightEncoder.setSamplesToAverage(7);
 
     leftMotor.setInverted(true);
     rightMotor.setInverted(true);
