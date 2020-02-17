@@ -24,7 +24,7 @@ import frc.robot.OI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import java.lang.System;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -115,7 +115,10 @@ public class Robot extends TimedRobot {
 
 
     // Extends intake
-    intake.intakeExtender.set(1.0);
+    // intake.intakeExtender.set(1.0);
+
+    // Activates intake
+    // intake.intakeRoller.set(0.52);
 
 
 
@@ -127,10 +130,28 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
+  }
+
+  @Override
+  public void robotPeriodic() {
+    // This is called every period regardless of mode
+    // drivetrain.drivetrain.tankDrive(-0.7, -0.7);
+    // shooter.topMotor.set(0.8);
+    // shooter.bottomMotor.set(0.8);
+
+    // elevator.extendMotor.set(0.6);
+    // elevator.liftMotor.set(0.8);
+
+    magazine.checkColor();
+
     table = NetworkTableInstance.getDefault().getTable("limelight");
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
+    // System.out.println("Vision Data");
+    // System.out.println(tx);
+    // System.out.println(ty);
+    // System.out.println(ta);
 
     //read values periodically
     double x = tx.getDouble(0.0);
@@ -141,19 +162,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
-
-  }
-
-  @Override
-  public void robotPeriodic() {
-    // This is called every period regardless of mode
-    // drivetrain.drivetrain.tankDrive(-0.7, -0.7);
-    shooter.topMotor.set(0.8);
-    shooter.bottomMotor.set(0.8);
-
-    // elevator.extendMotor.set(0.6);
-
-    magazine.checkColor();
   }
 
   @Override
@@ -165,13 +173,16 @@ public class Robot extends TimedRobot {
 
     m_autoSelected = m_chooser.getSelected();
 
-    drivetrain.driveRoute();
+    // drivetrain.driveRoute();
   }
 
   @Override
   public void autonomousPeriodic() {
     // This is called periodically while the robot is in autonomous mode
     super.autonomousPeriodic();
+    
+    System.out.println("Auto");
+    drivetrain.driveRoute();
 
     // teleopPeriodic();
 }
@@ -213,7 +224,7 @@ public class Robot extends TimedRobot {
 
 
     // Intake Roller    
-    // intake.intakeRoller.set(oi.XboxController2.getTriggerAxis(Hand.kRight)-oi.XboxController2.getTriggerAxis(Hand.kLeft));
+    // intake.intakeRoller.set(oi.XboxController0.getTriggerAxis(Hand.kRight)-oi.XboxController0.getTriggerAxis(Hand.kLeft));
     // intake.intakeRoller.set(-0.3);
       
     // Power Levels
@@ -241,36 +252,114 @@ public class Robot extends TimedRobot {
       SmartDashboard.putString("Power", "75%");
     }
 
-    double magnitudeLeft = Math.pow((oi.XboxController2.getY(Hand.kLeft)), 3) * level;
-    double magnitudeRight = Math.pow((oi.XboxController2.getY(Hand.kRight)), 3) * level;
+    double magnitudeLeft = Math.pow((oi.XboxController0.getY(Hand.kLeft)), 3) * level;
+    double magnitudeRight = Math.pow((oi.XboxController0.getY(Hand.kRight)), 3) * level;
     drivetrain.drivetrain.tankDrive(magnitudeLeft, magnitudeRight);
 
-    // Update_Limelight_Tracking();
+    // double rightTriggerValue = oi.XboxController0.getTriggerAxis(Hand.kRight);
+
+  
+    shooter.topMotor.set(oi.XboxController0.getTriggerAxis(Hand.kRight) * RobotMap2.shooterPower.value);
+    shooter.bottomMotor.set(oi.XboxController0.getTriggerAxis(Hand.kRight) * RobotMap2.shooterPower.value);
+    
+    
+    System.out.println("Trigger Data");
+    System.out.println(oi.XboxController0.getTriggerAxis(Hand.kRight));
+
+
+    Update_Limelight_Tracking();
 
     // double steer = oi.XboxController1.getX(Hand.kRight);
     // double drive = -oi.XboxController1.getY(Hand.kLeft);
-    // boolean auto = oi.XboxController1.getAButton();
+    
+    // Should this be a continuous hold or one-time push?
+    // boolean auto = oi.XboxController1.getXButton();
+
+    boolean auto = false;
 
     // steer *= 0.70;
     // drive *= 0.70;
 
-    // if (auto) {
-    //   if (m_LimelightHasValidTarget)
-    //   {
-    //         drivetrain.drivetrain.tankDrive(m_LimelightDriveCommand, m_LimelightSteerCommand);
-    //   }
-    //   else
-    //   {
-    //         drivetrain.drivetrain.tankDrive(0.0,0.0);
-    //   }
-    // }
-    // else {
-    //   drivetrain.drivetrain.tankDrive(drive,steer);
-    // }
+    if (auto) {
+      if (m_LimelightHasValidTarget) {
+        drivetrain.drivetrain.arcadeDrive(-m_LimelightDriveCommand, m_LimelightSteerCommand);
+      }
+      else {
+        drivetrain.drivetrain.arcadeDrive(0.0, 0.0);
+      }
+    }
+
+    // Shoot here
+    // shooter.bottomMotor.set(0.0);
+    // shooter.topMotor.set(0.0);
 
 
+    if(oi.XboxController0.getRawButton(1)){
+      if(!oi.togglePressed2){
+          oi.toggleOn2 = !oi.toggleOn2;
+          oi.togglePressed2 = true;
+      } else{
+          oi.togglePressed2 = false;
+      }
+    }
+
+    // Left Bumper - Forward
+    while (oi.XboxController0.getBumper(Hand.kLeft)) {
+      // drivetrain.drivetrain.tankDrive(RobotMap2.power.value, RobotMap2.power.value);
+      System.out.println("Extending...");
+      elevator.extendMotor.set(0.5);
+      
+    }
+
+    // Right Bumper - Backward
+    while (oi.XboxController0.getBumper(Hand.kRight)) {
+      // drivetrain.drivetrain.tankDrive(RobotMap2.power.value * -1 , RobotMap2.power.value * -1);
+      System.out.println("Lifting...");
+      elevator.liftMotor.set(-0.5);
+    }
+
+    // 100% Speed - A
+    while (oi.XboxController0.getAButtonPressed()) {
+      oi.fullPower = true;
+      oi.power83 = false;
+      oi.threeFourthsPower = false;
+    }
+
+    // 83% Speed - B
+    while (oi.XboxController0.getBButtonPressed()) {
+      oi.fullPower = false;
+      oi.power83 = true;
+      oi.threeFourthsPower = false;
+    }
+
+    // 75% Speed - Y
+    while (oi.XboxController0.getYButtonPressed()) {
+      oi.fullPower = false;
+      oi.power83 = false;
+      oi.threeFourthsPower = true;
+      if (autonomous) {
+        changeAutonomous = true;
+        level = 0.75;
+      }
+    }
+
+    // Empty Magazine - X
+    while (oi.XboxController0.getXButtonPressed()) {
+      magazine.magazineSpark.set(0.5);
+    }
+
+    while (oi.XboxController1.getAButtonPressed()) {
+      System.out.println("Extending...");
+      elevator.extendMotor.set(0.5);
+    }
+
+    while (oi.XboxController1.getBButtonPressed()) {
+      System.out.println("Lifting...");
+      elevator.liftMotor.set(-0.5);
+    }
   
-    
+  }
+
     // if (oi.toggleOn2) {
     //   // Punch
     //   puncher.punchBackward.set(false);
@@ -280,7 +369,6 @@ public class Robot extends TimedRobot {
     //   puncher.punchForward.set(false);
     //   puncher.punchBackward.set(true);
     // }
-  }
 
 
 	private void updateToggle() {
@@ -292,72 +380,31 @@ public class Robot extends TimedRobot {
       }else{
           oi.togglePressed1 = false;
       }
-  
-  if(oi.XboxController2.getRawButton(1)){
-    if(!oi.togglePressed2){
-        oi.toggleOn2 = !oi.toggleOn2;
-        oi.togglePressed2 = true;
-    }
-    }else{
-        oi.togglePressed2 = false;
     }
 
-  // Left Bumper - Forward
-  while (oi.XboxController2.getBumper(Hand.kLeft)) {
-    drivetrain.drivetrain.tankDrive(RobotMap2.power.value, RobotMap2.power.value);
 
-  }
-
-  // Right Bumper - Backward
-  while (oi.XboxController2.getBumper(Hand.kRight)) {
-    drivetrain.drivetrain.tankDrive(RobotMap2.power.value * -1 , RobotMap2.power.value * -1);
+  // elevator.extendMotor.set(0.0);
+  // elevator.liftMotor.set(0.0);
   
-  }
+  // // Extend elevator - left bumper hold
+  // while (oi.XboxController1.getBumper(Hand.kLeft)) {
+  //   elevator.extendMotor.set(0.5);
+  // }
 
-  // 100% Speed - A
-  while (oi.XboxController2.getAButtonPressed()) {
-    oi.fullPower = true;
-    oi.power83 = false;
-    oi.threeFourthsPower = false;
-  }
+  // while (oi.XboxController1.getXButtonPressed()) {
+  //   System.out.println("Extending...");
+  //   elevator.extendMotor.set(0.6);
+  // }
 
-  // 83% Speed - B
-  while (oi.XboxController2.getBButtonPressed()) {
-    oi.fullPower = false;
-    oi.power83 = true;
-    oi.threeFourthsPower = false;
-  }
-
-  // 75% Speed - Y
-  while (oi.XboxController2.getYButtonPressed()) {
-    oi.fullPower = false;
-    oi.power83 = false;
-    oi.threeFourthsPower = true;
-    if (autonomous) {
-      changeAutonomous = true;
-      level = 0.75;
-    }
-  
-  // Extend elevator - left bumper hold
-  while (oi.XboxController1.getBumper(Hand.kLeft)) {
-    elevator.extendMotor.set(0.5);
-  }
-
-  while (oi.XboxController1.getXButtonPressed()) {
-    System.out.println("Extending...");
-    elevator.extendMotor.set(0.6);
-  }
-
-  // Lift robot - right bumper hold
-  while (oi.XboxController1.getBumper(Hand.kRight)) {
-    elevator.liftMotor.set(0.5);
-  }
+  // // Lift robot - right bumper hold
+  // while (oi.XboxController1.getBumper(Hand.kRight)) {
+  //   elevator.liftMotor.set(0.5);
+  // }
 
 
 
-  }
 
-//   while (oi.XboxController2.getXButtonPressed()) {
+//   while (oi.XboxController0.getXButtonPressed()) {
 //     // come into range, aim, and align
 
 //     float KpAim = -0.1f;
@@ -399,47 +446,45 @@ public class Robot extends TimedRobot {
 
     // single test shot based on autonomous calculations
 
+
+// }
+
+
+public void Update_Limelight_Tracking() {
+  // These numbers must be tuned for your Robot!  Be careful!
+  final double STEER_K = 0.02;                    // how hard to turn toward the target
+  final double DRIVE_K = 0.26;                    // how hard to drive fwd toward the target
+  final double DESIRED_TARGET_AREA = 0.9;        // Area of the target when the robot reaches the wall
+  final double MAX_DRIVE = 0.7;                   // Simple speed limit so we don't drive too fast
+
+  double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
+  double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
+  double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0);
+  double ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
+
+  if (tv < 1.0) {
+    m_LimelightHasValidTarget = false;
+    m_LimelightDriveCommand = 0.0;
+    m_LimelightSteerCommand = 0.0;
+    return;
   }
-// }
 
+  m_LimelightHasValidTarget = true;
+  System.out.println("TARGET FOUND");
 
-// public void Update_Limelight_Tracking()
-// {
-//       // These numbers must be tuned for your Robot!  Be careful!
-//       final double STEER_K = 0.03;                    // how hard to turn toward the target
-//       final double DRIVE_K = 0.26;                    // how hard to drive fwd toward the target
-//       final double DESIRED_TARGET_AREA = 13.0;        // Area of the target when the robot reaches the wall
-//       final double MAX_DRIVE = 0.7;                   // Simple speed limit so we don't drive too fast
+  // Start with proportional steering
+  double steer_cmd = tx * STEER_K;
+  m_LimelightSteerCommand = steer_cmd;
 
-//       double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
-//       double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-//       double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-//       double ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
+  // try to drive forward until the target area reaches our desired area
+  double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
 
-//       if (tv < 1.0)
-//       {
-//         m_LimelightHasValidTarget = false;
-//         m_LimelightDriveCommand = 0.0;
-//         m_LimelightSteerCommand = 0.0;
-//         return;
-//       }
-
-//       m_LimelightHasValidTarget = true;
-
-//       // Start with proportional steering
-//       double steer_cmd = tx * STEER_K;
-//       m_LimelightSteerCommand = steer_cmd;
-
-//       // try to drive forward until the target area reaches our desired area
-//       double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
-
-//       // don't let the robot drive too fast into the goal
-//       if (drive_cmd > MAX_DRIVE)
-//       {
-//         drive_cmd = MAX_DRIVE;
-//       }
-//       m_LimelightDriveCommand = drive_cmd;
-// }
+  // don't let the robot drive too fast into the goal
+  if (drive_cmd > MAX_DRIVE) {
+    drive_cmd = MAX_DRIVE;
+  }
+  m_LimelightDriveCommand = drive_cmd;
+}
 
   @Override
   public void testInit() {

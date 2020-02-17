@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class OI {
   public XboxController XboxController1 = new XboxController(RobotMap.XboxController1.value);
-  public XboxController XboxController2 = new XboxController(RobotMap.XboxController2.value);
+  public XboxController XboxController0 = new XboxController(RobotMap.XboxController0.value);
   public boolean toggleOn1 = false;
   public boolean togglePressed1 = false;
   public boolean toggleOn2 = false;
@@ -20,7 +20,7 @@ public class OI {
   // DigitalInput forwardLimitSwitch = new DigitalInput(RobotMap.forwardLimitSwitch.value);
   // DigitalInput backwardLimitSwitch = new DigitalInput(RobotMap.backwardLimitSwitch.value);
 
-  public boolean fullPower = false;
+  public boolean fullPower = true;
   public boolean power83 = false;
-  public boolean threeFourthsPower = true;
+  public boolean threeFourthsPower = false;
 }

@@ -11,6 +11,9 @@ public enum RobotMap2 {
     // Power Value
     power(0.8),
 
+    // Shooter Power Value
+    shooterPower(0.8),
+
     //Encoder Values
     drivetrainEncoder_RadiansPerPulse(2*3.14/512), //Check, assume encoders have 512 pulse/rev
     drivetrainEncoder_MaxPeriod(1.0),

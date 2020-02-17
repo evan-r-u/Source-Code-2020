@@ -19,7 +19,7 @@ public class Magazine extends Subsystem {
      */
 
     public static int ballCount; 
-    public static Spark magazineSpark;
+    public Spark magazineSpark;
     private I2C.Port i2cPort;
     public static int waitCount;
 
@@ -91,9 +91,11 @@ public class Magazine extends Subsystem {
         // if(detectedColor.red >= 240 && detectedColor.red <= 260 && detectedColor.green >= 190 && detectedColor.green <= 210 && detectedColor.blue >= 0 && detectedColor.blue <= 10){
         
         // if yellow
+
+        // If there for a fraction of second, do not send!
         if (detectedColor.blue <= 0.15) {
             runMagazine();
-            Timer.delay(4);
+            Timer.delay(0.1);
             magazineSpark.set(0.0);
 
 
@@ -123,11 +125,11 @@ public class Magazine extends Subsystem {
 
 
     }
-    public static void runMagazine() {
+    public void runMagazine() {
         //checks that slot is open
         // if (ballCount < 5) {
         //run motor for ball to go up
-        magazineSpark.set(0.4);
+        magazineSpark.set(0.5);
 
         //ball count goes up by 1
         ballCount++;

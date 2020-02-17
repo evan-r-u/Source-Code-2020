@@ -9,16 +9,15 @@ package frc.robot;
 
 public enum RobotMap {
   // Motor Values
-  topShooter(3),
+  topShooter(4),
   bottomShooter(2),
   leftDrivetrain(1),
   rightDrivetrain(0),
-  magazineMotor(4),
+  magazineMotor(3),
   // Control Value
-  XboxController1(0),
-  XboxController2(1),
+  XboxController1(1),
+  XboxController0(0),
   // Elevator Values
-  // extendElevator(5),
   extendElevator(5),
   liftRobot(6),
   // Encoder Values
@@ -46,5 +45,4 @@ public enum RobotMap {
     this.value = value;
   }
 }
-
 

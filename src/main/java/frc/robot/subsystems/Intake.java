@@ -8,17 +8,19 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.Servo;
+// import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
 public class Intake extends Subsystem {
     public Spark intakeRoller;
-    public Servo intakeExtender;
+    // public Servo intakeExtender;
 
     public Intake() {
         intakeRoller = new Spark(RobotMap.intakeRoller.value);
-        intakeExtender = new Servo(RobotMap.intakeExtender.value);
+        intakeRoller.setInverted(true);
+        intakeRoller.setSafetyEnabled(false);
+        // intakeExtender = new Servo(RobotMap.intakeExtender.value);
     }
 
     @Override

@@ -34,12 +34,15 @@ public class Drivetrain extends Subsystem {
     // Configures the encoder's distance-per-pulse
     // The robot moves forward 1 foot per encoder rotation
     // There are 256 pulses per encoder rotation
+    leftEncoder.reset();
     leftEncoder.setDistancePerPulse(1./256.);
     leftEncoder.setMaxPeriod(RobotMap2.drivetrainEncoder_MaxPeriod.value);
     leftEncoder.setMinRate(RobotMap2.drivetrainEncoder_MinRate.value);
     leftEncoder.setDistancePerPulse(RobotMap2.drivetrainEncoder_RadiansPerPulse.value);
     leftEncoder.setSamplesToAverage(7);
 
+
+    rightEncoder.reset();
     rightEncoder.setDistancePerPulse(1./256.);
     rightEncoder.setMaxPeriod(RobotMap2.drivetrainEncoder_MaxPeriod.value);
     rightEncoder.setMinRate(RobotMap2.drivetrainEncoder_MinRate.value);
@@ -68,9 +71,13 @@ public class Drivetrain extends Subsystem {
     System.out.print("\nRight Encoder Distance -");
     System.out.print(rightEncoder.getDistance());
 
+    double error = Math.abs(leftEncoder.getDistance() - rightEncoder.getDistance());
+    double kP = 1;
+
     // Drives forward at half speed until the robot has moved 5 feet, then stops
-    if(leftEncoder.getDistance() < 5 && rightEncoder.getDistance() < 5) {
-      drivetrain.tankDrive(0.4, 0.4);
+    if(leftEncoder.getDistance() < 5) {
+      // Drives forward continuously at half speed, using the encoders to stabilize the heading
+      drivetrain.tankDrive(-0.51, -0.5);
     } else {
       drivetrain.tankDrive(0, 0);
     }

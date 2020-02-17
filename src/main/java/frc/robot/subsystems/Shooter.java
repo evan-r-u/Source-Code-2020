@@ -24,7 +24,7 @@ public class Shooter extends Subsystem {
     topMotor.setSafetyEnabled(false);
     bottomMotor.setSafetyEnabled(false);
 
-    topMotor.setInverted(true);
+    // topMotor.setInverted(true);
 
   }
 
