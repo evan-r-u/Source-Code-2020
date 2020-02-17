@@ -115,7 +115,7 @@ public class Robot extends TimedRobot {
 
 
     // Extends intake
-    // intake.intakeExtender.set(1.0);
+    intake.intakeExtender.set(0.5);
 
     // Activates intake
     // intake.intakeRoller.set(0.52);
@@ -173,6 +173,8 @@ public class Robot extends TimedRobot {
 
     m_autoSelected = m_chooser.getSelected();
 
+    drivetrain.turnAround();
+
     // drivetrain.driveRoute();
   }
 
@@ -182,7 +184,7 @@ public class Robot extends TimedRobot {
     super.autonomousPeriodic();
     
     System.out.println("Auto");
-    drivetrain.driveRoute();
+    // drivetrain.driveRoute();
 
     // teleopPeriodic();
 }
@@ -222,7 +224,7 @@ public class Robot extends TimedRobot {
     
     /*Controller 2*/
 
-
+  
     // Intake Roller    
     // intake.intakeRoller.set(oi.XboxController0.getTriggerAxis(Hand.kRight)-oi.XboxController0.getTriggerAxis(Hand.kLeft));
     // intake.intakeRoller.set(-0.3);

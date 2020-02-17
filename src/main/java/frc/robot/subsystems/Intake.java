@@ -14,13 +14,13 @@ import frc.robot.RobotMap;
 
 public class Intake extends Subsystem {
     public Spark intakeRoller;
-    // public Servo intakeExtender;
+    public Spark intakeExtender;
 
     public Intake() {
         intakeRoller = new Spark(RobotMap.intakeRoller.value);
         intakeRoller.setInverted(true);
         intakeRoller.setSafetyEnabled(false);
-        // intakeExtender = new Servo(RobotMap.intakeExtender.value);
+        intakeExtender = new Spark(RobotMap.intakeExtender.value);
     }
 
     @Override

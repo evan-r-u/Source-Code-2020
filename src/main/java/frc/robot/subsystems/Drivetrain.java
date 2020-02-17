@@ -82,6 +82,12 @@ public class Drivetrain extends Subsystem {
       drivetrain.tankDrive(0, 0);
     }
   }
+
+  public void turnAround() {
+    drivetrain.tankDrive(0.6, 0);
+  }
+
+
   @Override
   public void initDefaultCommand() {
   }
