@@ -84,7 +84,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public void turnAround() {
-    drivetrain.tankDrive(0.6, 0);
+    drivetrain.arcadeDrive(0.6, 1.0);
   }
 
 

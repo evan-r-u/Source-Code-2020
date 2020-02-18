@@ -95,7 +95,7 @@ public class Magazine extends Subsystem {
         // If there for a fraction of second, do not send!
         if (detectedColor.blue <= 0.15) {
             runMagazine();
-            Timer.delay(0.1);
+            Timer.delay(0.15);
             magazineSpark.set(0.0);
 
 
