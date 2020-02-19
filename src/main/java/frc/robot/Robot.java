@@ -62,15 +62,13 @@ public class Robot extends TimedRobot {
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
+  private static String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
   
-
-
   
   @Override
   public void robotInit() {
@@ -97,7 +95,6 @@ public class Robot extends TimedRobot {
 
     // Activates intake
     intake.intakeRoller.set(0.45);
-
 
 
     // Vision initialization
