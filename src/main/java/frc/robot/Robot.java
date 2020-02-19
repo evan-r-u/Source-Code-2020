@@ -24,7 +24,7 @@ import edu.wpi.first.cameraserver.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DigitalInput;
+// import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import java.lang.System;
 
@@ -152,7 +152,6 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
 
     // drivetrain.turnAround();
-
     // drivetrain.driveRoute();
   }
 
