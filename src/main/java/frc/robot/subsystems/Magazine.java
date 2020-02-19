@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.RobotMap;
+import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.Timer;
 
 
@@ -34,7 +35,7 @@ public class Magazine extends Subsystem {
     public Magazine() {
         i2cPort = I2C.Port.kOnboard;
         m_colorSensor = new ColorSensorV3(i2cPort);
-        magazineSpark = new Spark(RobotMap.magazineMotor.value);
+        magazineSpark = new Spark(RobotMap.magazineMotor);
         ballCount = 0;
         waitCount = 0;
 
@@ -135,6 +136,12 @@ public class Magazine extends Subsystem {
         ballCount++;
         }    
     
+    public void indexBall() {
+        magazineSpark.set(0.5);
+        Timer.delay(RobotMap.indexDelay);
+        magazineSpark.set(0.0);
+    }
+
     @Override
     public void initDefaultCommand() {
 

@@ -16,8 +16,8 @@
 //     public Solenoid punchBackward;
 
 //     public Puncher() {
-//         punchForward = new Solenoid(RobotMap.punchForward.value);
-//         punchBackward = new Solenoid(RobotMap.punchBackward.value);
+//         punchForward = new Solenoid(RobotMap.punchForward);
+//         punchBackward = new Solenoid(RobotMap.punchBackward);
 //     }
 
 //     @Override

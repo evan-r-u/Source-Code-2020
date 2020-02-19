@@ -16,8 +16,8 @@ public class Elevator extends Subsystem {
     public Spark liftMotor;
 
     public Elevator() {
-        extendMotor = new Spark(RobotMap.extendElevator.value);
-        liftMotor = new Spark(RobotMap.liftRobot.value);
+        extendMotor = new Spark(RobotMap.extendElevator);
+        liftMotor = new Spark(RobotMap.liftRobot);
     }
 
     @Override

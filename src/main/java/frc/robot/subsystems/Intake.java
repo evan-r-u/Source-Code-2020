@@ -17,10 +17,10 @@ public class Intake extends Subsystem {
     public Spark intakeExtender;
 
     public Intake() {
-        intakeRoller = new Spark(RobotMap.intakeRoller.value);
+        intakeRoller = new Spark(RobotMap.intakeRoller);
         intakeRoller.setInverted(true);
         intakeRoller.setSafetyEnabled(false);
-        intakeExtender = new Spark(RobotMap.intakeExtender.value);
+        intakeExtender = new Spark(RobotMap.intakeExtender);
     }
 
     @Override
