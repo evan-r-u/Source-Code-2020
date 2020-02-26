@@ -43,15 +43,24 @@ public class RobotMap {
   // Intake Values
   public static int intakeRoller = 7;
   public static int intakeExtender = 8;
+  public static double intakeSpeed = 0.8;
+  public static double intakeSpeedAdjusted = 0.8;
 
   // Power Value
   public static double power = 0.8;
 
   // Shooter Power Value
-  public static double shooterPower = 0.8;
+  public static double shooterPower = 0.6;
 
   // Index Delay
-  public static double indexDelay = 0.15;
+  public static double indexDelay = 0.5;
+  // indexDelay should be the same as indexDelayAdjusted
+  public static double indexDelayAdjusted = 0.5;
+
+  public static boolean delayIsAdjusted = false;
+
+  // Number of Balls
+  public static int numberOfBalls = 0;
 
   //Encoder Values
   public static double drivetrainEncoder_RadiansPerPulse = 2*3.14/512; //Check, assume encoders have 512 pulse/rev

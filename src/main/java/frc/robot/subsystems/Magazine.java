@@ -22,6 +22,7 @@ public class Magazine extends Subsystem {
     public Spark magazineSpark;
     private I2C.Port i2cPort;
     public static int waitCount;
+    public static double tempIndexDelay;
 
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a 
@@ -38,8 +39,6 @@ public class Magazine extends Subsystem {
         ballCount = 0;
         waitCount = 0;
 
-        SmartDashboard.putNumber("Number of Balls", ballCount);
-
     }
 
     public void checkColor() {
@@ -53,6 +52,10 @@ public class Magazine extends Subsystem {
          * an object is the more light from the surroundings will bleed into the 
          * measurements and make it difficult to accurately determine its color.
          */
+
+        SmartDashboard.putNumber("Number of Balls", RobotMap.numberOfBalls);
+        System.out.println("Number of Balls");
+        System.out.println(RobotMap.numberOfBalls);
 
         Color detectedColor = m_colorSensor.getColor();
 
@@ -89,14 +92,32 @@ public class Magazine extends Subsystem {
         //G = between 190 and 210
         //B = between 0 and 10
         // if(detectedColor.red >= 240 && detectedColor.red <= 260 && detectedColor.green >= 190 && detectedColor.green <= 210 && detectedColor.blue >= 0 && detectedColor.blue <= 10){
-        
-        // if yellow
 
-        // If there for a fraction of second, do not send!
+        // If ball is there
         if (detectedColor.blue <= 0.15) {
-            runMagazine();
-            Timer.delay(0.15);
-            magazineSpark.set(0.0);
+
+            if (RobotMap.numberOfBalls == 3) {
+                // RobotMap.numberOfBalls++;
+                RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+            }
+            else if (RobotMap.numberOfBalls == 4) {
+                Timer.delay(0.1);
+                RobotMap.intakeSpeedAdjusted = 0.0;
+            }
+            else {
+                if (RobotMap.numberOfBalls == 1) {
+                    tempIndexDelay = RobotMap.indexDelayAdjusted * 0.8;
+                }
+                else {
+                    tempIndexDelay = RobotMap.indexDelayAdjusted;
+                }
+                // RobotMap.numberOfBalls++;
+                magazineSpark.set(0.5);
+                Timer.delay(tempIndexDelay);
+                magazineSpark.set(0.0);
+            }
+        }
+        }
 
 
             // waitCount++;
@@ -113,7 +134,7 @@ public class Magazine extends Subsystem {
             // else {
             //     runMagazine();
             // }
-        }
+    
 
         // waitCount = 0;
             
@@ -124,21 +145,32 @@ public class Magazine extends Subsystem {
         // magazineSpark.set(0.6);
 
 
-    }
     public void runMagazine() {
         //checks that slot is open
         // if (ballCount < 5) {
         //run motor for ball to go up
-        magazineSpark.set(0.5);
+        magazineSpark.set(1);
 
         //ball count goes up by 1
-        ballCount++;
+        // ballCount++;
         }    
     
-    public void indexBall() {
+    public void shootBall() {
+        // MAKE PARAMETER FOR OUT VS IN
+        // if (RobotMap.numberOfBalls > 0) {
+        //     if (RobotMap.numberOfBalls <= 2 && RobotMap.delayIsAdjusted) {
+        //     RobotMap.indexDelayAdjusted += 0.12;
+        //     RobotMap.delayIsAdjusted = false;
+            
+        //     }
+        // }
+
+        // FIX THIS ADJUSTMENT - BASED ON "UNGRADUATED" VALUES
         magazineSpark.set(0.5);
-        Timer.delay(RobotMap.indexDelay);
+        Timer.delay(RobotMap.indexDelayAdjusted);
         magazineSpark.set(0.0);
+        RobotMap.numberOfBalls--;
+
     }
 
     @Override

@@ -27,6 +27,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import java.lang.System;
+import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -56,6 +57,7 @@ public class Robot extends TimedRobot {
   public static NetworkTableEntry ty;
   public static NetworkTableEntry ta;
   public static Spark testSpark;
+  public static double tempIndexDelay;
   
   public static XboxController XboxController0;
   public static XboxController XboxController1;
@@ -89,12 +91,18 @@ public class Robot extends TimedRobot {
     CameraServer.getInstance().startAutomaticCapture(0);
     CameraServer.getInstance().startAutomaticCapture(1);
 
+    // Resets index delay
+    RobotMap.indexDelayAdjusted = RobotMap.indexDelay;
+
+    // Resets intake speed adjustment
+    RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
+
 
     // Extends intake
     // intake.intakeExtender.set(0.5);
 
     // Activates intake
-    intake.intakeRoller.set(0.45);
+    // intake.intakeRoller.set(RobotMap.intakeSpeed);
 
 
     // Vision initialization
@@ -117,7 +125,13 @@ public class Robot extends TimedRobot {
     // elevator.extendMotor.set(0.6);
     // elevator.liftMotor.set(0.8);
 
-    magazine.checkColor();
+    // magazine.checkColor();
+    SmartDashboard.putNumber("Number of Balls", RobotMap.numberOfBalls);
+    System.out.println("Number of Balls");
+    System.out.println(RobotMap.numberOfBalls);
+
+    // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
+
 
     table = NetworkTableInstance.getDefault().getTable("limelight");
     tx = table.getEntry("tx");
@@ -246,6 +260,8 @@ public class Robot extends TimedRobot {
   
     shooter.topMotor.set(XboxController0.getTriggerAxis(Hand.kRight) * RobotMap.shooterPower);
     shooter.bottomMotor.set(XboxController0.getTriggerAxis(Hand.kRight) * RobotMap.shooterPower);
+
+    intake.intakeRoller.set(XboxController0.getTriggerAxis(Hand.kLeft) * RobotMap.intakeSpeed);
     
     
     System.out.println("Trigger Data");
@@ -303,19 +319,28 @@ public class Robot extends TimedRobot {
       elevator.liftMotor.set(-0.5);
     }
 
-    // 100% Speed - A
-    while (XboxController0.getAButtonPressed()) {
-      RobotMap.fullPower = true;
-      RobotMap.power83 = false;
-      RobotMap.threeFourthsPower = false;
+    // // 100% Speed - A
+    // while (XboxController0.getAButtonPressed()) {
+    //   RobotMap.fullPower = true;
+    //   RobotMap.power83 = false;
+    //   RobotMap.threeFourthsPower = false;
+    // }
+
+    // // 83% Speed - B
+    // while (XboxController0.getBButtonPressed()) {
+    //   RobotMap.fullPower = false;
+    //   RobotMap.power83 = true;
+    //   RobotMap.threeFourthsPower = false;
+    // }
+
+    // A - Shoot One Ball
+    if (XboxController0.getAButtonPressed()) {
+      RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
+      // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
+      magazine.shootBall();
     }
 
-    // 83% Speed - B
-    while (XboxController0.getBButtonPressed()) {
-      RobotMap.fullPower = false;
-      RobotMap.power83 = true;
-      RobotMap.threeFourthsPower = false;
-    }
+
 
     // 75% Speed - Y
     // while (XboxController0.getYButtonPressed()) {
@@ -346,14 +371,106 @@ public class Robot extends TimedRobot {
     }
 
     if (XboxController0.getStartButtonPressed()) {
-      magazine.indexBall();
+      // if (RobotMap.numberOfBalls == 2) {
+      //   // RobotMap.numberOfBalls++;
+      //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+      // }
+      if (RobotMap.numberOfBalls == 0) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.65;
+      }
+      if (RobotMap.numberOfBalls == 1) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
+        // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
+      }
+      if (RobotMap.numberOfBalls == 2) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
+      }
+      if (RobotMap.numberOfBalls == 3) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
+      }
+      // RobotMap.numberOfBalls++;
+      magazine.magazineSpark.set(0.6);
+      Timer.delay(tempIndexDelay);
+      // RobotMap.numberOfBalls++;
+      // magazine.magazineSpark.set(0.5);
+      // Timer.delay(RobotMap.indexDelayAdjusted);
+      magazine.magazineSpark.set(0.0);
+      RobotMap.numberOfBalls++;
     }
+
+      
+      // if (RobotMap.numberOfBalls >= 3 && ! RobotMap.delayIsAdjusted) {
+      //   RobotMap.indexDelayAdjusted -= 0.12;
+      //   RobotMap.delayIsAdjusted = true;
+      // }
+    
 
     if (XboxController0.getStartButtonReleased()) {
       magazine.magazineSpark.set(0.0);
     }
 
 
+    if (XboxController0.getBackButtonPressed()) {
+      // if (RobotMap.numberOfBalls == 2) {
+      //   // RobotMap.numberOfBalls++;
+      //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+      // }
+      if (RobotMap.numberOfBalls == 0) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.65;
+      }
+      if (RobotMap.numberOfBalls == 1) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted;
+        // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
+      }
+      if (RobotMap.numberOfBalls == 2) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted;
+      }
+      if (RobotMap.numberOfBalls == 3) {
+        tempIndexDelay = RobotMap.indexDelayAdjusted;
+      }
+      // RobotMap.numberOfBalls++;
+      magazine.magazineSpark.set(0.8);
+      Timer.delay(tempIndexDelay);
+      // RobotMap.numberOfBalls++;
+      // magazine.magazineSpark.set(0.5);
+      // Timer.delay(RobotMap.indexDelayAdjusted);
+      magazine.magazineSpark.set(0.0);
+      RobotMap.numberOfBalls--;
+    }
+
+    if (XboxController0.getBackButtonReleased()) {
+      magazine.magazineSpark.set(0.0);
+    }
+
+
+
+    // // Secondary driver indicates that one ball has entered the intake
+    // if (XboxController1.getBumperPressed(Hand.kLeft)) {
+    //   RobotMap.numberOfBalls++;
+    //   // if (RobotMap.numberOfBalls >= 3 && ! RobotMap.delayIsAdjusted) {
+    //   //   RobotMap.indexDelayAdjusted -= 0.12;
+    //   //   RobotMap.delayIsAdjusted = true;
+    //   // }
+    // }
+
+    // // }
+    // // Secondary driver indicates that one ball has been shot
+    // if (XboxController1.getBumperPressed(Hand.kRight)) {
+    //   if (RobotMap.numberOfBalls > 0) {
+    //     RobotMap.numberOfBalls--;
+    //     if (RobotMap.numberOfBalls <= 2 && RobotMap.delayIsAdjusted) {
+    //       RobotMap.indexDelayAdjusted += 0.12;
+    //       RobotMap.delayIsAdjusted = false;
+    //     }
+    // }
+      
+    // }
+
+    // Make intake a trigger hold down 
+
+
+    System.out.println(RobotMap.indexDelayAdjusted);
+    // SmartDashboard.putNumber("Adjusted Index Delay", RobotMap.indexDelayAdjusted);
 
     // // Empty Magazine - X
     // while (XboxController0.getXButtonPressed()) {
