@@ -68,8 +68,8 @@ public class Drivetrain extends Subsystem {
     System.out.print("\nRight Encoder Distance -");
     System.out.print(rightEncoder.getDistance());
 
-    double error = Math.abs(leftEncoder.getDistance() - rightEncoder.getDistance());
-    double kP = 1;
+    // double error = Math.abs(leftEncoder.getDistance() - rightEncoder.getDistance());
+    // double kP = 1;
 
     // Drives forward at half speed until the robot has moved 5 feet, then stops
     if(leftEncoder.getDistance() < 5) {
