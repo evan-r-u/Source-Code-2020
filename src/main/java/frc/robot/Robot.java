@@ -8,28 +8,21 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Spark;
-// import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
-// import frc.robot.subsystems.Puncher;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.cameraserver.*;
-// import frc.robot.OI;
-// import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-// import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import java.lang.System;
 import edu.wpi.first.wpilibj.Timer;
-
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -44,9 +37,9 @@ public class Robot extends TimedRobot {
   public static Drivetrain drivetrain;
   public static Intake intake;
   public static Elevator elevator;
-  // public static OI RobotMap;
   public static Magazine magazine;
   public static Shooter shooter;
+  public static Limelight limelight;
   public static double leftStickVal;
   public static double rightStickVal;
   public static Boolean autonomous;
@@ -62,14 +55,14 @@ public class Robot extends TimedRobot {
   public static XboxController XboxController0;
   public static XboxController XboxController1;
 
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private static String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  // private static final String kDefaultAuto = "Default";
+  // private static final String kCustomAuto = "My Auto";
+  // private static String m_autoSelected;
+  // private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  private boolean m_LimelightHasValidTarget = false;
-  private double m_LimelightDriveCommand = 0.0;
-  private double m_LimelightSteerCommand = 0.0;
+  // private boolean m_LimelightHasValidTarget = false;
+  // private double m_LimelightDriveCommand = 0.0;
+  // private double m_LimelightSteerCommand = 0.0;
   
   
   @Override
@@ -78,16 +71,13 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();
     intake = new Intake();
     elevator = new Elevator();
-    // puncher = new Puncher();
-    // RobotMap = new OI();
     magazine = new Magazine();
     shooter = new Shooter();
+    limelight = new Limelight();
 
     XboxController0 = new XboxController(RobotMap.XboxController0);
     XboxController1 = new XboxController(RobotMap.XboxController1);
     
-
-
     CameraServer.getInstance().startAutomaticCapture(0);
     CameraServer.getInstance().startAutomaticCapture(1);
 
@@ -97,60 +87,47 @@ public class Robot extends TimedRobot {
     // Resets intake speed adjustment
     RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
 
+    RobotMap.collectMode = false;
 
-    // Extends intake
-    // intake.intakeExtender.set(0.5);
+    limelight.activateUSBCamera();
 
-    // Activates intake
-    // intake.intakeRoller.set(RobotMap.intakeSpeed);
+    // // Vision Initialization
 
-
-    // Vision initialization
-
-    // CHANGE THIS NAME
-
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    // m_chooser.addOption("My Auto", kCustomAuto);
+    // SmartDashboard.putData("Auto choices", m_chooser);
 
   }
 
   @Override
   public void robotPeriodic() {
     // This is called every period regardless of mode
-    // drivetrain.drivetrain.tankDrive(-0.7, -0.7);
-    // shooter.topMotor.set(0.8);
-    // shooter.bottomMotor.set(0.8);
-
-    // elevator.extendMotor.set(0.6);
-    // elevator.liftMotor.set(0.8);
-
-    // magazine.checkColor();
+    if (RobotMap.activateSensor) {
+      magazine.checkColor();
+    }
     SmartDashboard.putNumber("Number of Balls", RobotMap.numberOfBalls);
     System.out.println("Number of Balls");
     System.out.println(RobotMap.numberOfBalls);
 
-    // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
+    limelight.refreshValues();
 
+    // table = NetworkTableInstance.getDefault().getTable("limelight");
+    // tx = table.getEntry("tx");
+    // ty = table.getEntry("ty");
+    // ta = table.getEntry("ta");
 
-    table = NetworkTableInstance.getDefault().getTable("limelight");
-    tx = table.getEntry("tx");
-    ty = table.getEntry("ty");
-    ta = table.getEntry("ta");
-    // System.out.println("Vision Data");
-    // System.out.println(tx);
-    // System.out.println(ty);
-    // System.out.println(ta);
+    // // Activates USB camera connected to LimeLight
+    // table.getEntry("stream").setNumber(0);
 
-    //read values periodically
-    double x = tx.getDouble(0.0);
-    double y = ty.getDouble(0.0);
-    double area = ta.getDouble(0.0);
+    // // Read values periodically
+    // double x = tx.getDouble(0.0);
+    // double y = ty.getDouble(0.0);
+    // double area = ta.getDouble(0.0);
 
-    //post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+    // // Post to smart dashboard periodically
+    // SmartDashboard.putNumber("LimelightX", x);
+    // SmartDashboard.putNumber("LimelightY", y);
+    // SmartDashboard.putNumber("LimelightArea", area);
   }
 
   @Override
@@ -160,10 +137,11 @@ public class Robot extends TimedRobot {
     changeAutonomous = false;
     super.autonomousInit();
 
-    m_autoSelected = m_chooser.getSelected();
+    limelight.m_autoSelected = limelight.m_chooser.getSelected();
 
-    // drivetrain.turnAround();
-    // drivetrain.driveRoute();
+    // Extends intake
+    intake.extendIntake();
+
   }
 
   @Override
@@ -172,9 +150,16 @@ public class Robot extends TimedRobot {
     super.autonomousPeriodic();
     
     System.out.println("Auto");
-    // drivetrain.driveRoute();
 
-    // teleopPeriodic();
+    limelight.updateTrackingData();
+
+    // Rotates about z-axis until it finds a target
+    if (limelight.m_LimelightHasValidTarget) {
+      drivetrain.drivetrain.arcadeDrive(-1 * limelight.m_LimelightDriveCommand, -1 * limelight.m_LimelightSteerCommand);
+    }
+    else {
+      drivetrain.turnAround();
+    }
 }
 
   @Override
@@ -188,213 +173,115 @@ public class Robot extends TimedRobot {
     autonomous = false;
     changeAutonomous = false;
     Scheduler.getInstance().run();
-    updateToggle();
-    
-    /*Controller 1*/
 
-    // lifter.Lifter1.set(XboxController1.getY(Hand.kRight));
-    // lifter.Lifter2.set(XboxController1.getY(Hand.kLeft));
-    
-    // // Pivot Control
-    // intake.intakePivot.set(XboxController1.getTriggerAxis(Hand.kRight)-XboxController1.getTriggerAxis(Hand.kLeft));
-    
-    // // Punch Control
-    // if (RobotMap.toggleOn1) {
-    //   // Punch
-    //   puncher.punchBackward.set(false);
-    //   puncher.punchForward.set(true);
-    // } else{
-    //   // Retract punch
-    //   puncher.punchForward.set(false);
-    //   puncher.punchBackward.set(true);
-    // }
+    // Drivetrain
 
-    
-    /*Controller 2*/
+    limelight.updateTrackingData();
 
-  
-    // Intake Roller    
-    // intake.intakeRoller.set(XboxController0.getTriggerAxis(Hand.kRight)-XboxController0.getTriggerAxis(Hand.kLeft));
-    // intake.intakeRoller.set(-0.3);
-      
-    // Power Levels
-    if (RobotMap.fullPower) {
-      level = 1;
-      System.out.println("Full power");
-      SmartDashboard.putString("Power", "100%");
-    }
-    else if (RobotMap.power83) {
-      level = 0.83;
-      System.out.println("83% power");
-      SmartDashboard.putString("Power", "83%");
-    }
-    else if (RobotMap.threeFourthsPower) {
-      if (autonomous) {
-        level = 0.65;
-      }
-      else if (autonomous && changeAutonomous) {
-        level = 0.75;
+    if (XboxController1.getYButton()) {
+      if (limelight.m_LimelightHasValidTarget) {
+        drivetrain.drivetrain.arcadeDrive(-1 * limelight.m_LimelightDriveCommand, -1 * limelight.m_LimelightSteerCommand);
       }
       else {
-        level = 0.75;
+        drivetrain.drivetrain.arcadeDrive(0, 0);
       }
-      System.out.println("3/4 power");
-      SmartDashboard.putString("Power", "75%");
     }
 
-    // double magnitudeLeft = Math.pow((XboxController0.getY(Hand.kLeft)), 3) * level;
-    // double magnitudeRight = Math.pow((XboxController0.getY(Hand.kRight)), 3) * level;
+    else {
+      double magnitudeLeft = RobotMap.drivetrainPower * (Math.pow(XboxController0.getY(Hand.kLeft), 3));
+      double magnitudeRight = RobotMap.drivetrainPower * (Math.pow(XboxController0.getY(Hand.kRight), 3));
 
-    // double magnitudeLeft = (Math.pow(2, XboxController0.getY(Hand.kLeft)) - 1) * level;
-    // double magnitudeRight = (Math.pow(2, XboxController0.getY(Hand.kRight)) - 1) * level;
+      if (RobotMap.collectMode) {
+        drivetrain.drivetrain.tankDrive(-1 * magnitudeRight, -1 * magnitudeLeft);
+      }
 
-    double magnitudeLeft = 0.7 * (Math.pow(XboxController0.getY(Hand.kLeft), 3));
-    double magnitudeRight = 0.7 * (Math.pow(XboxController0.getY(Hand.kRight), 3));
+      else {
+        drivetrain.drivetrain.tankDrive(magnitudeLeft, magnitudeRight);
+      }
+    }
 
-    drivetrain.drivetrain.tankDrive(magnitudeLeft, magnitudeRight);
+    // Fine tuning - yaw (about z-axis)
+    double fineYaw = RobotMap.fineDrivetrainPower * (Math.pow(XboxController1.getX(Hand.kRight), 3));
 
-    elevator.liftMotor.set(XboxController1.getY(Hand.kLeft));
-    elevator.extendMotor.set(XboxController1.getY(Hand.kRight));
+    drivetrain.drivetrain.arcadeDrive(0, fineYaw);
 
-    // double rightTriggerValue = XboxController0.getTriggerAxis(Hand.kRight);
+
+    // Shooter
   
     shooter.topMotor.set(XboxController0.getTriggerAxis(Hand.kRight) * RobotMap.shooterPower);
     shooter.bottomMotor.set(XboxController0.getTriggerAxis(Hand.kRight) * RobotMap.shooterPower);
 
+    // Intake
+
     intake.intakeRoller.set(XboxController0.getTriggerAxis(Hand.kLeft) * RobotMap.intakeSpeed);
-    
-    
-    System.out.println("Trigger Data");
-    System.out.println(XboxController0.getTriggerAxis(Hand.kRight));
+  
 
-
-    Update_Limelight_Tracking();
-
-    // double steer = XboxController1.getX(Hand.kRight);
-    // double drive = -XboxController1.getY(Hand.kLeft);
-    
-    // Should this be a continuous hold or one-time push?
-    boolean auto = XboxController1.getYButton();
-
-    // boolean auto = false;
-
-    // steer *= 0.70;
-    // drive *= 0.70;
-
-    if (auto) {
-      if (m_LimelightHasValidTarget) {
-        drivetrain.drivetrain.arcadeDrive(-m_LimelightDriveCommand, -m_LimelightSteerCommand);
-      }
-      else {
-        drivetrain.drivetrain.arcadeDrive(0.0, 0.0);
-      }
-    }
-
-    // Shoot here
-    // shooter.bottomMotor.set(0.0);
-    // shooter.topMotor.set(0.0);
-
-
-    if(XboxController0.getRawButton(1)){
-      if(!RobotMap.togglePressed2){
-          RobotMap.toggleOn2 = !RobotMap.toggleOn2;
-          RobotMap.togglePressed2 = true;
-      } else{
-          RobotMap.togglePressed2 = false;
-      }
-    }
-
-    // Left Bumper - Forward
+    // Left Bumper - Straight Forward
     while (XboxController0.getBumper(Hand.kLeft)) {
-      // drivetrain.drivetrain.tankDrive(RobotMap.power, RobotMap.power);
-      System.out.println("Extending...");
-      elevator.extendMotor.set(0.5);
-      
+      drivetrain.drivetrain.tankDrive(RobotMap.drivetrainPower, RobotMap.drivetrainPower);
     }
 
-    // Right Bumper - Backward
+    // Right Bumper - Straight Backward
     while (XboxController0.getBumper(Hand.kRight)) {
-      // drivetrain.drivetrain.tankDrive(RobotMap.power * -1 , RobotMap.power * -1);
-      System.out.println("Lifting...");
-      elevator.liftMotor.set(-0.5);
+      drivetrain.drivetrain.tankDrive(RobotMap.drivetrainPower * -1 , RobotMap.drivetrainPower * -1);
     }
 
-    // // 100% Speed - A
-    // while (XboxController0.getAButtonPressed()) {
-    //   RobotMap.fullPower = true;
-    //   RobotMap.power83 = false;
-    //   RobotMap.threeFourthsPower = false;
-    // }
-
-    // // 83% Speed - B
-    // while (XboxController0.getBButtonPressed()) {
-    //   RobotMap.fullPower = false;
-    //   RobotMap.power83 = true;
-    //   RobotMap.threeFourthsPower = false;
-    // }
-
-    // A - Shoot One Ball
-    if (XboxController0.getAButtonPressed()) {
-      RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
-      // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
-      magazine.shootBall();
-    }
-
-
-
-    // 75% Speed - Y
-    // while (XboxController0.getYButtonPressed()) {
-    //   // RobotMap.fullPower = false;
-    //   // RobotMap.power83 = false;
-    //   // RobotMap.threeFourthsPower = true;
-    //   // if (autonomous) {
-    //   //   changeAutonomous = true;
-    //   //   level = 0.75;
-    //   // }
-    //   magazine.magazineSpark.set(-0.5);
-    // }
-
+    // Run magazine forward
     if (XboxController0.getXButtonPressed()) {
-      magazine.magazineSpark.set(0.5);
+      magazine.magazineSpark.set(RobotMap.magazinePower);
     }
 
     if (XboxController0.getXButtonReleased()) {
       magazine.magazineSpark.set(0.0);
     }
 
+    // Run magazine backward
     if (XboxController0.getYButtonPressed()) {
-      magazine.magazineSpark.set(-0.5);
+      magazine.magazineSpark.set(-1 * RobotMap.magazinePower);
     }
 
     if (XboxController0.getYButtonReleased()) {
       magazine.magazineSpark.set(0.0);
     }
 
-    if (XboxController0.getStartButtonPressed()) {
-      // if (RobotMap.numberOfBalls == 2) {
-      //   // RobotMap.numberOfBalls++;
-      //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
-      // }
-      if (RobotMap.numberOfBalls == 0) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.65;
+    if (XboxController1.getXButtonPressed()) {
+      RobotMap.collectMode = ! RobotMap.collectMode;
+    }
+
+    // Back Button - Index One Ball
+    if (XboxController0.getBackButtonPressed()) {
+      if (RobotMap.rotationMode) {
+        magazine.rotateMagazine();
+        RobotMap.numberOfBalls++;
+
       }
-      if (RobotMap.numberOfBalls == 1) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
-        // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
-      }
-      if (RobotMap.numberOfBalls == 2) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
-      }
-      if (RobotMap.numberOfBalls == 3) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
-      }
-      // RobotMap.numberOfBalls++;
-      magazine.magazineSpark.set(0.6);
-      Timer.delay(tempIndexDelay);
-      // RobotMap.numberOfBalls++;
-      // magazine.magazineSpark.set(0.5);
-      // Timer.delay(RobotMap.indexDelayAdjusted);
-      magazine.magazineSpark.set(0.0);
+      else if (! RobotMap.activateSensor) {
+        // if (RobotMap.numberOfBalls == 2) {
+        //   // RobotMap.numberOfBalls++;
+        //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+        // }
+        
+        if (RobotMap.numberOfBalls == 0) {
+          tempIndexDelay = RobotMap.indexDelayAdjusted * 0.8;
+        }
+        if (RobotMap.numberOfBalls == 1) {
+          tempIndexDelay = RobotMap.indexDelayAdjusted;
+          // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
+        }
+        if (RobotMap.numberOfBalls == 2) {
+          tempIndexDelay = RobotMap.indexDelayAdjusted * 0.4;
+        }
+        if (RobotMap.numberOfBalls == 3) {
+          tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
+        }
+        // RobotMap.numberOfBalls++;
+        magazine.magazineSpark.set(RobotMap.magazinePower);
+        Timer.delay(tempIndexDelay);
+        // RobotMap.numberOfBalls++;
+        // magazine.magazineSpark.set(0.5);
+        // Timer.delay(RobotMap.indexDelayAdjusted);
+        magazine.magazineSpark.set(0.0);
+
       RobotMap.numberOfBalls++;
     }
 
@@ -405,217 +292,93 @@ public class Robot extends TimedRobot {
       // }
     
 
+    if (XboxController0.getBackButtonReleased()) {
+      magazine.magazineSpark.set(0.0);
+    }
+
+    // Start Button - Shoot One Ball
+    if (XboxController0.getStartButtonPressed()) {
+      RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
+      if (RobotMap.rotationMode) {
+        magazine.rotateMagazine();
+        RobotMap.numberOfBalls--;
+      }
+      else {
+        // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
+        magazine.shootBall();
+      }
+      
+    }
+
     if (XboxController0.getStartButtonReleased()) {
       magazine.magazineSpark.set(0.0);
     }
 
 
-    if (XboxController0.getBackButtonPressed()) {
-      // if (RobotMap.numberOfBalls == 2) {
-      //   // RobotMap.numberOfBalls++;
-      //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
-      // }
-      if (RobotMap.numberOfBalls == 0) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted * 0.65;
-      }
-      if (RobotMap.numberOfBalls == 1) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted;
-        // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
-      }
-      if (RobotMap.numberOfBalls == 2) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted;
-      }
-      if (RobotMap.numberOfBalls == 3) {
-        tempIndexDelay = RobotMap.indexDelayAdjusted;
-      }
-      // RobotMap.numberOfBalls++;
-      magazine.magazineSpark.set(0.8);
-      Timer.delay(tempIndexDelay);
-      // RobotMap.numberOfBalls++;
-      // magazine.magazineSpark.set(0.5);
-      // Timer.delay(RobotMap.indexDelayAdjusted);
-      magazine.magazineSpark.set(0.0);
-      RobotMap.numberOfBalls--;
-    }
-
-    if (XboxController0.getBackButtonReleased()) {
-      magazine.magazineSpark.set(0.0);
-    }
-
-
-
-    // // Secondary driver indicates that one ball has entered the intake
-    // if (XboxController1.getBumperPressed(Hand.kLeft)) {
-    //   RobotMap.numberOfBalls++;
-    //   // if (RobotMap.numberOfBalls >= 3 && ! RobotMap.delayIsAdjusted) {
-    //   //   RobotMap.indexDelayAdjusted -= 0.12;
-    //   //   RobotMap.delayIsAdjusted = true;
+    // if (XboxController0.getBackButtonPressed()) {
+    //   // if (RobotMap.numberOfBalls == 2) {
+    //   //   // RobotMap.numberOfBalls++;
+    //   //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
     //   // }
+    //   if (RobotMap.numberOfBalls == 0) {
+    //     tempIndexDelay = RobotMap.indexDelayAdjusted * 0.65;
+    //   }
+    //   if (RobotMap.numberOfBalls == 1) {
+    //     tempIndexDelay = RobotMap.indexDelayAdjusted;
+    //     // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
+    //   }
+    //   if (RobotMap.numberOfBalls == 2) {
+    //     tempIndexDelay = RobotMap.indexDelayAdjusted;
+    //   }
+    //   if (RobotMap.numberOfBalls == 3) {
+    //     tempIndexDelay = RobotMap.indexDelayAdjusted;
+    //   }
+    //   // RobotMap.numberOfBalls++;
+    //   magazine.magazineSpark.set(RobotMap.magazinePower);
+    //   Timer.delay(tempIndexDelay);
+    //   // RobotMap.numberOfBalls++;
+    //   // magazine.magazineSpark.set(RobotMap.magazinePower);
+    //   // Timer.delay(RobotMap.indexDelayAdjusted);
+    //   magazine.magazineSpark.set(0.0);
+    //   RobotMap.numberOfBalls--;
     // }
 
-    // // }
-    // // Secondary driver indicates that one ball has been shot
-    // if (XboxController1.getBumperPressed(Hand.kRight)) {
-    //   if (RobotMap.numberOfBalls > 0) {
-    //     RobotMap.numberOfBalls--;
-    //     if (RobotMap.numberOfBalls <= 2 && RobotMap.delayIsAdjusted) {
-    //       RobotMap.indexDelayAdjusted += 0.12;
-    //       RobotMap.delayIsAdjusted = false;
-    //     }
-    // }
-      
+    // if (XboxController0.getBackButtonReleased()) {
+    //   magazine.magazineSpark.set(0.0);
     // }
 
-    // Make intake a trigger hold down 
-
-
-    System.out.println(RobotMap.indexDelayAdjusted);
-    // SmartDashboard.putNumber("Adjusted Index Delay", RobotMap.indexDelayAdjusted);
-
-    // // Empty Magazine - X
-    // while (XboxController0.getXButtonPressed()) {
-    //   magazine.magazineSpark.set(0.5);
-    // }
 
     while (XboxController1.getAButtonPressed()) {
       System.out.println("Extending...");
-      elevator.extendMotor.set(0.5);
+      elevator.extendMotor.set(RobotMap.extendPower);
     }
 
     while (XboxController1.getBButtonPressed()) {
       System.out.println("Lifting...");
-      elevator.liftMotor.set(-0.5);
+      elevator.liftMotor.set(-1 * RobotMap.liftPower);
     }
 
-    // magazine.magazineSpark.set(0.0);
-  
-  }
+    // Extend intake roller
+    while (XboxController1.getBumperPressed(Hand.kLeft)) {
+      intake.intakeExtender.set(RobotMap.rollerExtendPower);
+    }
 
-    // if (RobotMap.toggleOn2) {
-    //   // Punch
-    //   puncher.punchBackward.set(false);
-    //   puncher.punchForward.set(true);
-    // } else{
-    //   // Retract punch
-    //   puncher.punchForward.set(false);
-    //   puncher.punchBackward.set(true);
-    // }
-
-
-	private void updateToggle() {
-    if(XboxController1.getRawButton(1)){
-      if(!RobotMap.togglePressed1){
-          RobotMap.toggleOn1 = !RobotMap.toggleOn1;
-          RobotMap.togglePressed1 = true;
-      }
-      }else{
-          RobotMap.togglePressed1 = false;
-      }
+    while (XboxController1.getBumperReleased(Hand.kLeft)) {
+      intake.intakeExtender.set(0.0);
     }
 
 
-  // elevator.extendMotor.set(0.0);
-  // elevator.liftMotor.set(0.0);
-  
-  // // Extend elevator - left bumper hold
-  // while (XboxController1.getBumper(Hand.kLeft)) {
-  //   elevator.extendMotor.set(0.5);
-  // }
+    // Retract intake roller
+    while (XboxController1.getBumperPressed(Hand.kRight)) {
+      intake.intakeExtender.set(-1 * RobotMap.rollerExtendPower);
+    }
 
-  // while (XboxController1.getXButtonPressed()) {
-  //   System.out.println("Extending...");
-  //   elevator.extendMotor.set(0.6);
-  // }
+    while (XboxController1.getBumperReleased(Hand.kRight)) {
+      intake.intakeExtender.set(0.0);
+    }
 
-  // // Lift robot - right bumper hold
-  // while (XboxController1.getBumper(Hand.kRight)) {
-  //   elevator.liftMotor.set(0.5);
-  // }
+  }}
 
-
-
-
-//   while (XboxController0.getXButtonPressed()) {
-//     // come into range, aim, and align
-
-//     float KpAim = -0.1f;
-//     float KpDistance = -0.1f;
-//     float min_aim_command = 0.05f;
-
-    // std::shared_ptr<NetworkTable> table = NetworkTable::GetTable("limelight");
-    // float tx = table->GetNumber("tx");
-    // float ty = table->GetNumber("ty");
-
-
-    // NetworkTableEntry tx = table.getEntry("tx");
-    // NetworkTableEntry ty = table.getEntry("ty");
-    // double x = tx.getDouble(0.0);
-    // double y = ty.getDouble(0.0);
-    
-
-// // if (joystick->GetRawButton(9))
-// // {
-//     float heading_error = -tx;
-//     float distance_error = -ty;
-//     float steering_adjust = 0.0f;
-
-//     if (tx > 1.0)
-//     {
-//             steering_adjust = KpAim*heading_error - min_aim_command;
-//     }
-//     else if (tx < 1.0)
-//     {
-//             steering_adjust = KpAim*heading_error + min_aim_command;
-//     }
-
-//     float distance_adjust = KpDistance * distance_error;
-
-//     left_command += steering_adjust + distance_adjust;
-//     right_command -= steering_adjust + distance_adjust;
-// // }
-
-
-    // single test shot based on autonomous calculations
-
-
-// }
-
-
-public void Update_Limelight_Tracking() {
-  // These numbers must be tuned for your Robot!  Be careful!
-  final double STEER_K = 0.02;                    // how hard to turn toward the target
-  final double DRIVE_K = 0.26;                    // how hard to drive fwd toward the target
-  final double DESIRED_TARGET_AREA = 3.0;        // Area of the target when the robot reaches the wall
-  final double MAX_DRIVE = 0.7;                   // Simple speed limit so we don't drive too fast
-
-  double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
-  double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
-  double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0);
-  double ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
-
-  if (tv < 1.0) {
-    m_LimelightHasValidTarget = false;
-    m_LimelightDriveCommand = 0.0;
-    m_LimelightSteerCommand = 0.0;
-    return;
-  }
-
-  m_LimelightHasValidTarget = true;
-  System.out.println("TARGET FOUND");
-
-  // Start with proportional steering
-  double steer_cmd = tx * STEER_K;
-  m_LimelightSteerCommand = steer_cmd;
-
-  // try to drive forward until the target area reaches our desired area
-  double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
-
-  // don't let the robot drive too fast into the goal
-  if (drive_cmd > MAX_DRIVE) {
-    drive_cmd = MAX_DRIVE;
-  }
-  m_LimelightDriveCommand = drive_cmd;
-}
 
   @Override
   public void testInit() {

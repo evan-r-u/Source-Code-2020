@@ -19,12 +19,9 @@ public class Shooter extends Subsystem {
     topMotor = new Spark(RobotMap.topShooter);
     bottomMotor = new Spark(RobotMap.bottomShooter);
 
-
-    // ensures that motors keep running during Timer.delay()
+    // Ensures that motors keep running during Timer.delay()
     topMotor.setSafetyEnabled(false);
     bottomMotor.setSafetyEnabled(false);
-
-    // topMotor.setInverted(true);
 
   }
 

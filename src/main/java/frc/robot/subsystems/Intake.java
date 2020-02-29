@@ -8,9 +8,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Spark;
-// import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Intake extends Subsystem {
     public Spark intakeRoller;
@@ -21,6 +21,12 @@ public class Intake extends Subsystem {
         intakeRoller.setInverted(true);
         intakeRoller.setSafetyEnabled(false);
         intakeExtender = new Spark(RobotMap.intakeExtender);
+    }
+
+    public void extendIntake() {
+        intakeExtender.set(-0.6);
+        Timer.delay(3);
+        intakeExtender.set(0.0);
     }
 
     @Override

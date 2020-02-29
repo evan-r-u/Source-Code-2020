@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Encoder;
 
 
 public class Magazine extends Subsystem {
@@ -23,6 +24,7 @@ public class Magazine extends Subsystem {
     private I2C.Port i2cPort;
     public static int waitCount;
     public static double tempIndexDelay;
+    public Encoder magazineEncoder;
 
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a 
@@ -36,8 +38,16 @@ public class Magazine extends Subsystem {
         i2cPort = I2C.Port.kOnboard;
         m_colorSensor = new ColorSensorV3(i2cPort);
         magazineSpark = new Spark(RobotMap.magazineMotor);
-        ballCount = 0;
-        waitCount = 0;
+        // ballCount = 0;
+        // waitCount = 0;
+        magazineEncoder = new Encoder(RobotMap.magazineEncoderA, RobotMap.magazineEncoderB, RobotMap.magazineEncoder_Reverse, Encoder.EncodingType.k2X);
+        
+        magazineEncoder.reset();
+        magazineEncoder.setDistancePerPulse(1./256.);
+        magazineEncoder.setMaxPeriod(RobotMap.magazineEncoder_MaxPeriod);
+        magazineEncoder.setMinRate(RobotMap.magazineEncoder_MinRate);
+        magazineEncoder.setDistancePerPulse(RobotMap.magazineEncoder_RadiansPerPulse);
+        magazineEncoder.setSamplesToAverage(7);
 
     }
 
@@ -87,37 +97,71 @@ public class Magazine extends Subsystem {
         int proximity = m_colorSensor.getProximity();
 
         SmartDashboard.putNumber("Proximity", proximity);
-        // detects color so that it only runs if ball is yellow
-        //R = between 240 and 260
-        //G = between 190 and 210
-        //B = between 0 and 10
-        // if(detectedColor.red >= 240 && detectedColor.red <= 260 && detectedColor.green >= 190 && detectedColor.green <= 210 && detectedColor.blue >= 0 && detectedColor.blue <= 10){
-
+        // Detects color so that it only runs if ball is yellow
         // If ball is there
         if (detectedColor.blue <= 0.15) {
 
-            if (RobotMap.numberOfBalls == 3) {
-                // RobotMap.numberOfBalls++;
-                RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+            // Uses magazine encoder
+            if (RobotMap.rotationMode) {
+                rotateMagazine();
+                RobotMap.numberOfBalls++;
             }
-            else if (RobotMap.numberOfBalls == 4) {
-                Timer.delay(0.1);
-                RobotMap.intakeSpeedAdjusted = 0.0;
-            }
+
+
+            // Uses timing delay
             else {
-                if (RobotMap.numberOfBalls == 1) {
-                    tempIndexDelay = RobotMap.indexDelayAdjusted * 0.8;
+                if (RobotMap.numberOfBalls == 0) {
+                    tempIndexDelay = RobotMap.indexDelayAdjusted * 0.65;
                 }
-                else {
-                    tempIndexDelay = RobotMap.indexDelayAdjusted;
+                if (RobotMap.numberOfBalls == 1) {
+                    tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
+                    // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted * 1.2);
+                }
+                if (RobotMap.numberOfBalls == 2) {
+                    tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
+                }
+                if (RobotMap.numberOfBalls == 3) {
+                    tempIndexDelay = RobotMap.indexDelayAdjusted * 0.85;
                 }
                 // RobotMap.numberOfBalls++;
-                magazineSpark.set(0.5);
-                Timer.delay(tempIndexDelay);
+                magazineSpark.set(RobotMap.magazinePower);
+                Timer.delay(RobotMap.magazinePower);
+                // RobotMap.numberOfBalls++;
+                // magazine.magazineSpark.set(0.5);
+                // Timer.delay(RobotMap.indexDelayAdjusted);
                 magazineSpark.set(0.0);
+                // RobotMap.numberOfBalls++;
+                }
             }
+
+            // // OLD CODE 
+
+            // if (RobotMap.numberOfBalls == 2) {
+                //   // RobotMap.numberOfBalls++;
+                //   RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+                // }
+            // if (RobotMap.numberOfBalls == 3) {
+            //     // RobotMap.numberOfBalls++;
+            //     RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed / 2;
+            // }
+            // else if (RobotMap.numberOfBalls == 4) {
+            //     Timer.delay(0.1);
+            //     RobotMap.intakeSpeedAdjusted = 0.0;
+            // }
+            // else {
+            //     if (RobotMap.numberOfBalls == 1) {
+            //         tempIndexDelay = RobotMap.indexDelayAdjusted * 0.8;
+            //     }
+            //     else {
+            //         tempIndexDelay = RobotMap.indexDelayAdjusted;
+            //     }
+            //     // RobotMap.numberOfBalls++;
+            //     magazineSpark.set(0.5);
+            //     Timer.delay(tempIndexDelay);
+            //     magazineSpark.set(0.0);
+            // }
         }
-        }
+        
 
 
             // waitCount++;
@@ -156,7 +200,6 @@ public class Magazine extends Subsystem {
         }    
     
     public void shootBall() {
-        // MAKE PARAMETER FOR OUT VS IN
         // if (RobotMap.numberOfBalls > 0) {
         //     if (RobotMap.numberOfBalls <= 2 && RobotMap.delayIsAdjusted) {
         //     RobotMap.indexDelayAdjusted += 0.12;
@@ -166,11 +209,20 @@ public class Magazine extends Subsystem {
         // }
 
         // FIX THIS ADJUSTMENT - BASED ON "UNGRADUATED" VALUES
-        magazineSpark.set(0.5);
+        magazineSpark.set(RobotMap.magazinePower);
         Timer.delay(RobotMap.indexDelayAdjusted);
         magazineSpark.set(0.0);
         RobotMap.numberOfBalls--;
 
+    }
+
+    public void rotateMagazine() {
+        // Rotates the magazine until the rotation distance is achieved
+        if (magazineEncoder.getDistance() < RobotMap.magazineRotationDistance) {
+            magazineSpark.set(RobotMap.magazinePower);
+        } else {
+            magazineEncoder.reset();
+        }
     }
 
     @Override

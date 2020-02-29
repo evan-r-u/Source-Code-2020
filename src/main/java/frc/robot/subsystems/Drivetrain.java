@@ -11,9 +11,6 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap;
-// import frc.robot.RobotMap;
-// import frc.robot.RobotMap;
-// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
 import java.lang.System;
 
@@ -28,8 +25,8 @@ public class Drivetrain extends Subsystem {
     leftMotor = new VictorSP(RobotMap.leftDrivetrain);
     rightMotor = new VictorSP(RobotMap.rightDrivetrain);
     drivetrain = new DifferentialDrive(leftMotor, rightMotor);
-    leftEncoder = new Encoder(RobotMap.leftDrivetrainEncoder1, RobotMap.leftDrivetrainEncoder2, RobotMap.leftDrivetrainEncoder_Reverse, Encoder.EncodingType.k2X);
-    rightEncoder = new Encoder(RobotMap.rightDrivetrainEncoder1, RobotMap.rightDrivetrainEncoder2, RobotMap.rightDrivetrainEncoder_Reverse, Encoder.EncodingType.k2X);
+    leftEncoder = new Encoder(RobotMap.leftDrivetrainEncoderA, RobotMap.leftDrivetrainEncoderB, RobotMap.leftDrivetrainEncoder_Reverse, Encoder.EncodingType.k2X);
+    rightEncoder = new Encoder(RobotMap.rightDrivetrainEncoderA, RobotMap.rightDrivetrainEncoderB, RobotMap.rightDrivetrainEncoder_Reverse, Encoder.EncodingType.k2X);
     
     // Configures the encoder's distance-per-pulse
     // The robot moves forward 1 foot per encoder rotation
@@ -52,7 +49,7 @@ public class Drivetrain extends Subsystem {
     leftMotor.setInverted(true);
     rightMotor.setInverted(true);
     
-    // ensures that motors keep running during Timer.delay()
+    // Ensures that motors keep running during Timer.delay()
     drivetrain.setSafetyEnabled(false);
 
   }
@@ -84,7 +81,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public void turnAround() {
-    drivetrain.arcadeDrive(0.6, 1.0);
+    drivetrain.arcadeDrive(0, 0.8);
   }
 
 
