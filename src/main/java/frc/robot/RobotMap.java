@@ -66,7 +66,7 @@ public class RobotMap {
 
   public static boolean magazineEncoder_Reverse = false;
 
-  public static double magazineRotationDistance = 1.0; // Tune this!
+  public static double magazineRotationDistance = 0.2; // Tune this!
 
 
   // Elevator

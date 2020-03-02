@@ -25,8 +25,8 @@ import java.lang.System;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.networktables.NetworkTable;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 
@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
-  private static String m_autoSelected;
+  public static String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   private boolean m_LimelightHasValidTarget = false;
@@ -130,11 +130,9 @@ public class Robot extends TimedRobot {
     // limelight.refreshValues();
     // refreshValues();
 
-   
 
     // elevator.liftMotor.set(RobotMap.liftPower);
-    
-
+  
 
     table = NetworkTableInstance.getDefault().getTable("limelight");
     tx = table.getEntry("tx");
