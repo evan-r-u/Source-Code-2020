@@ -25,7 +25,7 @@ public class RobotMap {
   public static boolean rightDrivetrainEncoder_Reverse = true;
   
   public static double drivetrainPower = 0.85;
-  public static double fineDrivetrainPower = 0.4;
+  public static double fineDrivetrainPower = 0.8;
 
 
   // Shooter
@@ -74,7 +74,7 @@ public class RobotMap {
   public static int liftRobot = 6;
 
   public static double extendPower = 0.5;
-  public static double liftPower = 0.5;
+  public static double liftPower = 0.8;
 
 
   // Controller Ports
@@ -87,7 +87,7 @@ public class RobotMap {
 
 
   // For Testing
-  public static boolean activateSensor = true;
+  public static boolean activateSensor = false;
   public static boolean rotationMode = true;
 
 

@@ -24,7 +24,7 @@ public class Intake extends Subsystem {
     }
 
     public void extendIntake() {
-        intakeExtender.set(-0.6);
+        intakeExtender.set(0.6);
         Timer.delay(3);
         intakeExtender.set(0.0);
     }
