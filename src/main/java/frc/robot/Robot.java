@@ -221,7 +221,7 @@ public class Robot extends TimedRobot {
       }
 
       // Fine tuning - yaw (about z-axis)
-      double fineYaw = RobotMap.fineDrivetrainPower * (Math.pow(XboxController0.getX(Hand.kRight), 3));
+      double fineYaw = RobotMap.fineDrivetrainPower * (Math.pow(XboxController1.getX(Hand.kRight), 3));
 
       drivetrain.drivetrain.arcadeDrive(0, fineYaw);
 
