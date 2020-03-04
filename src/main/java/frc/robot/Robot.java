@@ -102,7 +102,7 @@ public class Robot extends TimedRobot {
     // limelight.activateUSBCamera();
     // limelight.turnOffLED();
 
-    table.getEntry("ledMode").setNumber(1);
+    // table.getEntry("ledMode").setNumber(1);
 
 
     // Vision Initialization
@@ -163,9 +163,9 @@ public class Robot extends TimedRobot {
     // limelight.m_autoSelected = limelight.m_chooser.getSelected();
     m_autoSelected = m_chooser.getSelected();
 
-    intake.intakeExtender.set(0.6);
-    Timer.delay(3);
-    intake.intakeExtender.set(0.0);
+    // intake.intakeExtender.set(0.6);
+    // Timer.delay(3);
+    // intake.intakeExtender.set(0.0);
 
   }
 
@@ -199,15 +199,20 @@ public class Robot extends TimedRobot {
     changeAutonomous = false;
     Scheduler.getInstance().run();
 
+    System.out.println(magazine.magazineEncoder.getDistance());
     // Drivetrain
 
     // limelight.updateTrackingData();
 
     updateTrackingData();
 
-    if (XboxController1.getYButton()) {
+    if (XboxController1.getYButtonPressed()) {
+      RobotMap.autoMode = ! RobotMap.autoMode;
+    }
+
+    if (RobotMap.autoMode) {
       // Turn on LED
-      table.getEntry("ledMode").setNumber(3);
+      // table.getEntry("ledMode").setNumber(3);
       if (m_LimelightHasValidTarget) {
         drivetrain.drivetrain.arcadeDrive(-1 * m_LimelightDriveCommand, -1 * m_LimelightSteerCommand);
       }
@@ -216,13 +221,13 @@ public class Robot extends TimedRobot {
       }
 
       // Fine tuning - yaw (about z-axis)
-      double fineYaw = RobotMap.fineDrivetrainPower * (Math.pow(XboxController1.getX(Hand.kRight), 3));
+      double fineYaw = RobotMap.fineDrivetrainPower * (Math.pow(XboxController0.getX(Hand.kRight), 3));
 
       drivetrain.drivetrain.arcadeDrive(0, fineYaw);
 
     } else {
       // Turn off LED
-      table.getEntry("ledMode").setNumber(1);
+      // table.getEntry("ledMode").setNumber(1);
 
       double magnitudeLeft = RobotMap.drivetrainPower * (Math.pow(XboxController0.getY(Hand.kLeft), 3));
       double magnitudeRight = RobotMap.drivetrainPower * (Math.pow(XboxController0.getY(Hand.kRight), 3));
@@ -279,6 +284,65 @@ public class Robot extends TimedRobot {
       RobotMap.collectMode = ! RobotMap.collectMode;
     }
 
+
+    if (XboxController1.getAButton()) {
+      System.out.println("Extending...");
+      elevator.extendMotor.set(RobotMap.extendPower);
+    }
+    else {
+      elevator.extendMotor.set(0.0);
+    }
+  
+    if (XboxController1.getBButton()) {
+      System.out.println("Lifting...");
+      elevator.liftMotor.set(RobotMap.liftPower);
+    }
+    else {
+      elevator.liftMotor.set(0.0);
+    }
+  
+    // Extend intake roller
+    while (XboxController1.getBumperPressed(Hand.kLeft)) {
+      intake.intakeExtender.set(RobotMap.rollerExtendPower);
+    }
+  
+    while (XboxController1.getBumperReleased(Hand.kLeft)) {
+      intake.intakeExtender.set(0.0);
+    }
+  
+  
+    // Retract intake roller
+    while (XboxController1.getBumperPressed(Hand.kRight)) {
+      intake.intakeExtender.set(-1 * RobotMap.rollerExtendPower);
+    }
+  
+    while (XboxController1.getBumperReleased(Hand.kRight)) {
+      intake.intakeExtender.set(0.0);
+    }
+
+
+
+
+    // Start Button - Shoot One Ball
+    if (XboxController0.getStartButtonPressed()) {
+      RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
+      if (RobotMap.rotationMode) {
+        magazine.rotateMagazine();
+        RobotMap.numberOfBalls--;
+      }
+      else {
+        // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
+        magazine.shootBall();
+      }
+      
+    }
+
+    if (XboxController0.getStartButtonReleased()) {
+      magazine.magazineSpark.set(0.0);
+    }
+
+
+
     // Back Button - Index One Ball
     if (XboxController0.getBackButtonPressed()) {
       if (RobotMap.rotationMode) {
@@ -314,8 +378,8 @@ public class Robot extends TimedRobot {
         magazine.magazineSpark.set(0.0);
 
       RobotMap.numberOfBalls++;
+      }
     }
-  }
 
       
       // if (RobotMap.numberOfBalls >= 3 && ! RobotMap.delayIsAdjusted) {
@@ -324,26 +388,10 @@ public class Robot extends TimedRobot {
       // }
     
 
-  if (XboxController0.getBackButtonReleased()) {
-    magazine.magazineSpark.set(0.0);
-  }
+    if (XboxController0.getBackButtonReleased()) {
+      magazine.magazineSpark.set(0.0);
+      }
 
-  // Start Button - Shoot One Ball
-  if (XboxController0.getStartButtonPressed()) {
-    RobotMap.intakeSpeedAdjusted = RobotMap.intakeSpeed;
-    if (RobotMap.rotationMode) {
-      magazine.rotateMagazine();
-      RobotMap.numberOfBalls--;
-    }
-    else {
-      // intake.intakeRoller.set(RobotMap.intakeSpeedAdjusted);
-      magazine.shootBall();
-    }
-    
-  }
-
-  if (XboxController0.getStartButtonReleased()) {
-    magazine.magazineSpark.set(0.0);
   }
 
 
@@ -385,45 +433,7 @@ public class Robot extends TimedRobot {
   //   elevator.extendMotor.set(RobotMap.extendPower);
   // }
 
-  if (XboxController1.getAButton()) {
-    System.out.println("Extending...");
-    intake.intakeExtender.set(-0.6);
-    Timer.delay(3);
-    intake.intakeExtender.set(0.0);
-    elevator.extendMotor.set(RobotMap.extendPower);
-  }
-  else {
-    elevator.extendMotor.set(0.0);
-  }
-
-  if (XboxController1.getBButton()) {
-    System.out.println("Lifting...");
-    elevator.liftMotor.set(-1 * RobotMap.liftPower);
-  }
-  else {
-    elevator.liftMotor.set(0.0);
-  }
-
-  // Extend intake roller
-  while (XboxController1.getBumperPressed(Hand.kLeft)) {
-    intake.intakeExtender.set(RobotMap.rollerExtendPower);
-  }
-
-  while (XboxController1.getBumperReleased(Hand.kLeft)) {
-    intake.intakeExtender.set(0.0);
-  }
-
-
-  // Retract intake roller
-  while (XboxController1.getBumperPressed(Hand.kRight)) {
-    intake.intakeExtender.set(-1 * RobotMap.rollerExtendPower);
-  }
-
-  while (XboxController1.getBumperReleased(Hand.kRight)) {
-    intake.intakeExtender.set(0.0);
-  }
-
-}
+  
 
   public void updateTrackingData() {
     final double STEER_K = 0.1;                         // how hard to turn toward the target
